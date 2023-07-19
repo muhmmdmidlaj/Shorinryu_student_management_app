@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:shorinryu/api/authenticate/register/register_authenticat.dart';
+import 'package:shorinryu/api/authenticate/user_auth.dart';
 import 'package:shorinryu/precentation/view/login&register/login.dart';
 import 'package:shorinryu/precentation/view/user/home_user/home.dart';
 import 'package:sizer/sizer.dart';
-import '../../../api/authenticate/register/register_authenticat.dart';
+// import '../../../api/authenticate/register/register_authenticat.dart';
 
+// ignore: must_be_immutable
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
 
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passWordController = TextEditingController();
-
-  void submitForm() {
+  bool isRegisterd = false;
+  // UserAuthFunctions reg = UserAuthFunctions();
+  void submitForm(context) async {
     String username = userNameController.text;
     String email = emailController.text;
     String password = passWordController.text;
@@ -20,7 +24,14 @@ class RegisterScreen extends StatelessWidget {
       'email': email,
       'password': password
     };
-    registerUser(data);
+
+    await registerUser(data);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePageUser(),
+        ),
+        (route) => false);
   }
 
   final formKey = GlobalKey<FormState>();
@@ -169,13 +180,8 @@ class RegisterScreen extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
-                                  submitForm();
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => HomePageUser(),
-                                      ),
-                                      (route) => false);
+                                  submitForm(context);
+                                  // checkUser(emailController.text, context);
                                 }
                               },
                               style: const ButtonStyle(
@@ -196,4 +202,18 @@ class RegisterScreen extends StatelessWidget {
       },
     );
   }
+
+  // void checkUser(String email, context) async {
+  //   bool isUserRegistered = await checkUserExists(email);
+  //   if (isUserRegistered) {
+  //     print('user Exist');
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) => Text('User Already Exist'),
+  //     );
+  //     // User is already registered
+  //   } else {
+  //     // User is not registered
+  //   }
+  // }
 }

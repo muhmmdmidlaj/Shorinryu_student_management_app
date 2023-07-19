@@ -3,7 +3,7 @@ import 'package:shorinryu/precentation/view/admin/attendence/attendence_mark.dar
 import 'package:shorinryu/precentation/view/admin/chat/chat_list/chat_list.dart';
 import 'package:shorinryu/precentation/view/admin/fee_updation/fee_updation.dart';
 import 'package:shorinryu/precentation/view/admin/leave_request/leave_request.dart';
-import 'package:shorinryu/precentation/view/admin/student_details/student_details.dart';
+import 'package:shorinryu/precentation/view/admin/student_details/student_list.dart';
 import 'package:shorinryu/precentation/view/admin/video_confrence/video_confrence_list.dart';
 import 'package:sizer/sizer.dart';
 
@@ -163,7 +163,7 @@ class AdminHomeScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              const AdminStudentDetailsViewScreen(),
+                              const AdminStudentListViewScreen(),
                         ),
                       );
                     },

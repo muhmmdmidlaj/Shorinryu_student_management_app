@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shorinryu/precentation/view/user/announcement_view/announcement_view.dart';
 import 'package:shorinryu/precentation/view/user/attendence_view/attendence_view.dart';
-// import 'package:shorinryu/precentation/view/user/leave-application/leave_application.dart';
+import 'package:shorinryu/precentation/view/user/home_user/widget/darawer.dart';
 import 'package:shorinryu/precentation/view/user/leave-application/leave_request_status.dart';
 import 'package:shorinryu/precentation/view/user/new_applycation/new_admission.dart';
+import 'package:shorinryu/precentation/view/user/payment/payment_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class HomePageUser extends StatelessWidget {
@@ -13,33 +15,21 @@ class HomePageUser extends StatelessWidget {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return Scaffold(
-          drawer: SingleChildScrollView(
-            child: Container(
-              height: 90.h,
-              width: 70.w,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
-                  child: Column(
-                    children: [
-                      
-                    ],
-                  ),
-            ),
-          ),
+          drawer: DrawerWidget(),
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
             leading: IconButton(
                 onPressed: () {
-                  Drawer(
-                    child: SingleChildScrollView(
-                      child: Container(),
-                    ),
-                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DrawerWidget(),
+                      ));
                 },
                 icon: const Icon(
-                  Icons.list,
+                  Icons.account_circle_outlined,
                   color: Colors.yellowAccent,
                 )),
             title: const Text(
@@ -178,7 +168,8 @@ class HomePageUser extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => LeaveRequestStatusScreen(),
+                            builder: (context) =>
+                                const LeaveRequestStatusScreen(),
                           ));
                     },
                   ),
@@ -213,6 +204,13 @@ class HomePageUser extends StatelessWidget {
                         )
                       ]),
                     ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>const PaymentScreen(),
+                          ));
+                    },
                   ),
                 ),
                 Padding(
@@ -249,7 +247,7 @@ class HomePageUser extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AttendenceViewScreen(),
+                            builder: (context) => const AttendenceViewScreen(),
                           ));
                     },
                   ),
@@ -257,6 +255,13 @@ class HomePageUser extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AnnouncementViewScreen(),
+                          ));
+                    },
                     child: Container(
                       width: 40.w,
                       height: 20.h,
@@ -274,7 +279,7 @@ class HomePageUser extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.all(15.0),
                           child: Text(
-                            'Announcement',
+                            'Daily Updations',
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,

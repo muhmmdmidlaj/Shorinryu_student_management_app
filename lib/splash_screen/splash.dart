@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shorinryu/precentation/view/login&register/login.dart';
 import 'package:sizer/sizer.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -12,26 +13,46 @@ class SplashScreen extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return Scaffold(
           body: Container(
-            decoration: BoxDecoration(
+            width: screenWidth,
+            height: screenHight,
+            decoration: const BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.cover,
                     image: AssetImage(
                         'asset/img/karate-graduation-blackbelt-martial-arts.jpg'))),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Column(
-                    children: [
-                      Text('Work '),
-                      Text('Hard '),
-                      Text('Fight'),
-                      Text('Easy'),
-                    ],
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      'Work Hard,\n        Fight Easy',
+                      style:
+                          TextStyle(color: Colors.yellowAccent, fontSize: 25),
+                    ),
                   ),
                 ),
-              ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ));
+                        },
+                        child: const Text(
+                          "Let's Start-->",
+                          style: TextStyle(
+                              color: Colors.yellowAccent, fontSize: 25),
+                        )),
+                  ),
+                ),
+              ],
             ),
           ),
         );

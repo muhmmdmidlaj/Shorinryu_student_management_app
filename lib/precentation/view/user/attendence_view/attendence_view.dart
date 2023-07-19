@@ -25,124 +25,127 @@ class AttendenceViewScreen extends StatelessWidget {
               style: TextStyle(color: Colors.yellowAccent),
             ),
           ),
-          body: Container(
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(
-                        'asset/img/karate-graduation-blackbelt-martial-arts.jpg')),
-                gradient: LinearGradient(
-                  colors: [Colors.white, Colors.white38, Colors.white],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                )),
-            child: Column(children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                      height: 120,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(149, 0, 0, 0),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'Precent Days',
-                              style: TextStyle(
-                                  color: Colors.yellowAccent, fontSize: 17),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              '65',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 1, 255, 9),
-                                  fontSize: 35,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                      height: 120,
-                      width: 150,
-                      decoration: BoxDecoration(
+          body: SingleChildScrollView(
+            child: Container(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                          'asset/img/karate-graduation-blackbelt-martial-arts.jpg')),
+                  gradient: LinearGradient(
+                    colors: [Colors.white, Colors.white38, Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  )),
+              child: Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Container(
+                        height: 120,
+                        width: 150,
+                        decoration: BoxDecoration(
                           color: const Color.fromARGB(149, 0, 0, 0),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: const Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'Absent Days',
-                              style: TextStyle(
-                                  color: Colors.yellowAccent, fontSize: 17),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              '10',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 255, 17, 0),
-                                  fontSize: 35,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 62.h,
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(185, 0, 0, 0),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: ListView.builder(
-                    itemCount: 20,
-                    itemBuilder: (context, index) => const ListTile(
-                      leading: Text(
-                        '15',
-                        style: TextStyle(
-                            fontSize: 25,
-                            color: Colors.yellowAccent,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      trailing: Text(
-                        'precent',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color.fromARGB(255, 0, 255, 8),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-                      title: Text(
-                        'March 2023',
-                        style: TextStyle(
-                          fontSize: 19,
-                          color: Colors.yellowAccent,
+                        child: const Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Precent Days',
+                                style: TextStyle(
+                                    color: Colors.yellowAccent, fontSize: 17),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                '65',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 1, 255, 9),
+                                    fontSize: 35,
+                                    fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Container(
+                        height: 120,
+                        width: 150,
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(149, 0, 0, 0),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: const Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Absent Days',
+                                style: TextStyle(
+                                    color: Colors.yellowAccent, fontSize: 17),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                '10',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 255, 17, 0),
+                                    fontSize: 35,
+                                    fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              )
-            ]),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: double.infinity,
+                    height: 62.h,
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(185, 0, 0, 0),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: ListView.builder(
+                      itemCount: 20,
+                      itemBuilder: (context, index) => const ListTile(
+                        leading: Text(
+                          '15',
+                          style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.yellowAccent,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Text(
+                          'Present',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(255, 0, 255, 8),
+                          ),
+                        ),
+                        title: Text(
+                          'March 2023',
+                          style: TextStyle(
+                            fontSize: 19,
+                            color: Colors.yellowAccent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ]),
+            ),
           ),
         );
       },

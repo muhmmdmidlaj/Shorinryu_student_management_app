@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shorinryu/precentation/view/login&register/login.dart';
+import 'package:provider/provider.dart';
+import 'package:shorinryu/provider/register_function.dart';
+// import 'package:shorinryu/precentation/view/login&register/login.dart';
+import 'package:shorinryu/splash_screen/splash.dart';
 // import 'package:shorinryu/splash_screen/splash.dart';
 
 void main(List<String> args) {
@@ -11,9 +14,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => RegisterDetailsForm()),
+      ],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      ),
     );
   }
 }

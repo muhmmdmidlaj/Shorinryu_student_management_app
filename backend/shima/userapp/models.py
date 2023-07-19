@@ -49,3 +49,10 @@ class Users(AbstractBaseUser,PermissionsMixin):
 
     def _str_(self):
         return self.email
+
+class leave_application(models.Model):
+    user=models.ForeignKey(Users,on_delete=models.CASCADE)
+    start=models.DateField(auto_now=False, auto_now_add=False)
+    end=models.DateField(auto_now=False, auto_now_add=False)
+    reasone=models.CharField( max_length=500)
+    is_approved=models.BooleanField(default=False)

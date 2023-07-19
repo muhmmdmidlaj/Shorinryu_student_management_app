@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:shorinryu/api/authenticate/login/login_authentication.dart';
+import 'package:shorinryu/api/authenticate/user_auth.dart';
 import 'package:shorinryu/precentation/view/admin/home/admin_home.dart';
 import 'package:shorinryu/precentation/view/login&register/register.dart';
 import 'package:shorinryu/precentation/view/user/home_user/home.dart';
 import 'package:sizer/sizer.dart';
 
+// ignore: must_be_immutable
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   TextEditingController loginEmailController = TextEditingController();
   TextEditingController loginPasswordController = TextEditingController();
-
-  void loginSubmitForm() async {
+  // UserAuthFunctions logn = UserAuthFunctions();
+  void loginSubmitForm(ctx) async {
     String email = loginEmailController.text;
     String password = loginPasswordController.text;
     Map<String, dynamic> data = {'email': email, 'password': password};
-    await loginUser(data);
+    // await logn.loginUser(data);
+    loginUser(data);
+    Navigator.pushAndRemoveUntil(
+        ctx,
+        MaterialPageRoute(
+          builder: (context) => const HomePageUser(),
+        ),
+        (route) => false);
   }
 
   final loginKey = GlobalKey<FormState>();
@@ -110,7 +119,8 @@ class LoginPage extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AdminHomeScreen(),
+                                    builder: (context) =>
+                                        const AdminHomeScreen(),
                                   ));
                             },
                             child: const Text('Forgot Password'),
@@ -121,14 +131,7 @@ class LoginPage extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         if (loginKey.currentState!.validate()) {
-                          loginSubmitForm();
-
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomePageUser(),
-                              ),
-                              (route) => false);
+                          loginSubmitForm(context);
                         }
                       },
                       style: const ButtonStyle(
@@ -140,7 +143,7 @@ class LoginPage extends StatelessWidget {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(left: 10.h),
-                          child: Text(
+                          child: const Text(
                             "Don't have an account?",
                             style: TextStyle(color: Colors.yellowAccent),
                           ),

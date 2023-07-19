@@ -29,30 +29,34 @@ final List<String> labelTextList = [
   'Parent Contact Number'
 ];
 
-final TextEditingController candidateNameController = TextEditingController();
-final TextEditingController addressController = TextEditingController();
-final TextEditingController postOfficeController = TextEditingController();
-final TextEditingController pinNumberController = TextEditingController();
-final TextEditingController proofNumberConroller = TextEditingController();
-final TextEditingController contactNumberController = TextEditingController();
-final TextEditingController alternateNumberController = TextEditingController();
-final TextEditingController mailIdController = TextEditingController();
-final TextEditingController dOBController = TextEditingController();
-final TextEditingController ageController = TextEditingController();
-final TextEditingController parentsNameController = TextEditingController();
-final TextEditingController parentsNumberController = TextEditingController();
+class RegisterFormController {
+  final TextEditingController candidateNameController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController postOfficeController = TextEditingController();
+  final TextEditingController pinNumberController = TextEditingController();
+  final TextEditingController proofNumberConroller = TextEditingController();
+  final TextEditingController contactNumberController = TextEditingController();
+  final TextEditingController alternateNumberController =
+      TextEditingController();
+  final TextEditingController mailIdController = TextEditingController();
+  final TextEditingController dOBController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController parentsNameController = TextEditingController();
+  final TextEditingController parentsNumberController = TextEditingController();
+}
 
+RegisterFormController reclr = RegisterFormController();
 final List<TextEditingController> formController = [
-  candidateNameController,
-  addressController,
-  postOfficeController,
-  pinNumberController,
-  proofNumberConroller,
-  contactNumberController,
-  alternateNumberController,
-  mailIdController,
-  dOBController,
-  ageController,
-  parentsNameController,
-  parentsNumberController,
+  reclr.candidateNameController,
+  reclr.addressController,
+  reclr.postOfficeController,
+  reclr.pinNumberController,
+  reclr.proofNumberConroller,
+  reclr.contactNumberController,
+  reclr.alternateNumberController,
+  reclr.mailIdController,
+  reclr.dOBController,
+  reclr.ageController,
+  reclr.parentsNameController,
+  reclr.parentsNumberController,
 ];

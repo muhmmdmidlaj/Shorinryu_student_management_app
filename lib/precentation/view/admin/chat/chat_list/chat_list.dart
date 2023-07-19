@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shorinryu/precentation/view/admin/chat/chat_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class AdminChatListScreen extends StatelessWidget {
@@ -26,12 +27,22 @@ class AdminChatListScreen extends StatelessWidget {
             ),
           ),
           body: ListView.builder(
-            itemBuilder: (context, index) => ListTile(
-              leading: CircleAvatar(
-                radius: 6.w,
+            itemBuilder: (context, index) => Card(
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AdminChatscreenView(),
+                    ),
+                  );
+                },
+                leading: CircleAvatar(
+                  radius: 6.w,
+                ),
+                title: Text('User Name'),
+                trailing: Text('Date /Time'),
               ),
-              title: Text('User Name'),
-              trailing: Text('Date /Time'),
             ),
           ),
         );

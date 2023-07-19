@@ -16,7 +16,7 @@ class LeaveRequestStatusScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon:const Icon(
+                icon: const Icon(
                   Icons.arrow_back_ios,
                   color: Colors.yellowAccent,
                 )),
@@ -27,7 +27,7 @@ class LeaveRequestStatusScreen extends StatelessWidget {
             ),
           ),
           body: Container(
-            decoration:const BoxDecoration(
+            decoration: const BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.cover,
                     image: AssetImage(
@@ -38,25 +38,30 @@ class LeaveRequestStatusScreen extends StatelessWidget {
                   end: Alignment.bottomCenter,
                 )),
             child: ListView.builder(
-              itemBuilder: (context, index) =>const ListTile(
-                leading: Text(
-                  'date',
-                  style: TextStyle(color: Colors.yellowAccent),
+              itemBuilder: (context, index) => const Card(
+                child: ListTile(
+                  leading: Text(
+                    'date',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  title: Text('Reason', style: TextStyle(color: Colors.black)),
+                  trailing: Text('Appruve/reject',
+                      style: TextStyle(color: Colors.black)),
                 ),
-                title: Text('Reason',
-                    style: TextStyle(color: Colors.yellowAccent)),
-                trailing: Text('Appruve/reject',
-                    style: TextStyle(color: Colors.yellowAccent)),
               ),
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            child:const Icon(Icons.add_circle),
+            backgroundColor: Colors.yellowAccent,
+            child: const Icon(
+              Icons.add_circle,
+              color: Colors.black,
+            ),
             onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>const LeaveApplicationFormScreen(),
+                    builder: (context) => const LeaveApplicationFormScreen(),
                   ));
             },
           ),

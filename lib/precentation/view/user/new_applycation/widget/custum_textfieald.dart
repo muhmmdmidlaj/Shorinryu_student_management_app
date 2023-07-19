@@ -6,12 +6,12 @@ class CustumTextField extends StatelessWidget {
   CustumTextField(
       {super.key,
       required this.hintText,
-      required this.controller,
+      required this.rgController,
       required this.labelTxt});
 
   final String hintText;
   final String labelTxt;
-  final TextEditingController controller;
+  final TextEditingController rgController;
 
   NewAdmissionScreen addmissionScreen = NewAdmissionScreen();
 
@@ -22,7 +22,7 @@ class CustumTextField extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
         child: TextFormField(
-          controller: controller,
+          controller: rgController,
           decoration: InputDecoration(
               label: Text(
                 labelTxt,

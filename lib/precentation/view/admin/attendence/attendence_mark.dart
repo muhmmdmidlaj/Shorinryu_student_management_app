@@ -21,19 +21,27 @@ class AdminAttendenceMarkScreen extends StatelessWidget {
                 )),
             backgroundColor: Colors.black.withOpacity(0.7300000190734863),
             title: const Text(
-              'Fee Updation',
+              'Mark Attendance',
               style: TextStyle(color: Colors.yellowAccent),
             ),
           ),
-          body: ListView.builder(
-            itemBuilder: (context, index) => ListTile(
-              leading: CircleAvatar(
-                radius: 6.w,
-              ),
-              title: Text('User Name'),
-              trailing: Checkbox(
-                value: false,
-                onChanged: (value) {},
+          body: Container(
+            decoration:const BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage('asset/img/splashImage.jpg'))),
+            child: ListView.builder(
+              itemBuilder: (context, index) => Card(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 6.w,
+                  ),
+                  title:const Text('User Name'),
+                  trailing: Checkbox(
+                    value: false,
+                    onChanged: (value) {},
+                  ),
+                ),
               ),
             ),
           ),

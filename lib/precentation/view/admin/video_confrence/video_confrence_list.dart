@@ -27,12 +27,14 @@ class VideoConfrenceListScreen extends StatelessWidget {
           ),
           body: Container(
             child: ListView.builder(
-              itemBuilder: (context, index) => ListTile(
-                leading: CircleAvatar(
-                  radius: 6.w,
+              itemBuilder: (context, index) => Card(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 6.w,
+                  ),
+                  title: Text('User Name'),
+                  trailing: Icon(Icons.video_call_outlined),
                 ),
-                title: Text('User Name'),
-                trailing: Icon(Icons.video_call_outlined),
               ),
             ),
           ),
