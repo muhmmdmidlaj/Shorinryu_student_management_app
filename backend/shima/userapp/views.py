@@ -12,9 +12,14 @@ from userapp.serializers import UserSerializer,leave_applicationSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from  userapp.utilities import genarate_otp
+from rest_framework_simplejwt.views import TokenRefreshView
 
 
 
+
+
+class RefreshTokenView(TokenRefreshView):
+    pass
 
 
 class RegistrationView(CreateAPIView):
@@ -96,16 +101,16 @@ class GetSelfUserView(RetrieveAPIView):
     def get_object(self):
         return self.request.user
     
-class UpdateUserView(UpdateAPIView):
+class AdminUserUpdateView(UpdateAPIView):
     serializer_class = UserSerializer
     queryset = Users.objects.all()
-    permission_classes = [IsAuthenticated | IsAdminUser]
+    permission_classes = [IsAdminUser]
     lookup_field = 'id'
 
     def get_object(self):
         user_id = self.kwargs.get('id')  # Assuming the URL pattern captures the user ID
         user = Users.objects.get(id=int(user_id))
-        if user.is_superuser or (user.id == self.request.user.id):
+        if user.is_superuser:
             return user
         else:
             self.permission_denied(self.request)

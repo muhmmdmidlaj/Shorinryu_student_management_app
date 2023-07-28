@@ -97,7 +97,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -169,3 +169,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'muhammedmidlaj8395@gmail.com'
 EMAIL_HOST_PASSWORD = 'qrxrxilqektkxuij'
 EMAIL_USE_TLS= True
+
+
+#media uploding folders
+MEDIA_ROOT = BASE_DIR /'uploads'
+MEDIA_URL = '/media/'

@@ -27,18 +27,21 @@ class Users(AbstractBaseUser,PermissionsMixin):
     )
     name=models.CharField(max_length=150)
     email = models.EmailField(unique=True)
-    aadhar_number = models.IntegerField(null=True)
+    aadhar_number = models.BigIntegerField(null=True)
     profile_picture = models.ImageField(upload_to='profile_picture/', null=True)
     gender = models.CharField(choices=GENDERS, max_length=30, null=True)
     date_of_birth = models.DateField(verbose_name='Date of Birth', null=True)
     guardian_name = models.CharField(max_length=120,null=True)
-    guardian_contact_number = models.IntegerField(null=True)
-    number = models.IntegerField(verbose_name='phone number', null=True)
+    guardian_contact_number = models.BigIntegerField(null=True)
+    number = models.BigIntegerField(verbose_name='phone number', null=True)
     married = models.BooleanField(default=False)
-    alternate_number = models.IntegerField(null=True)
+    alternate_number = models.BigIntegerField(null=True)
     is_form_filled = models.BooleanField(default=False)
     last_payment = models.DateField(verbose_name='Fees paid', auto_now=False, auto_now_add=False, null=True)
     is_staff=models.BooleanField(default=False)
+    address=models.CharField(max_length=350,null=True)
+    pincode=models.CharField(max_length=10,null=True)
+    post=models.CharField(max_length=100,null=True)
 
     # Additional fields or methods can be added here
 
@@ -47,7 +50,7 @@ class Users(AbstractBaseUser,PermissionsMixin):
 
     objects = CustomUserManager()
 
-    def _str_(self):
+    def __str__(self):
         return self.email
 
 class leave_application(models.Model):
@@ -56,3 +59,6 @@ class leave_application(models.Model):
     end=models.DateField(auto_now=False, auto_now_add=False)
     reasone=models.CharField( max_length=500)
     is_approved=models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.email

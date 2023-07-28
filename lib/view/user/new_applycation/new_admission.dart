@@ -1,0 +1,126 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shorinryu/controller/provider/register_function_prov.dart';
+import 'package:shorinryu/view/user/new_applycation/widget/text_form_field.dart';
+import 'package:sizer/sizer.dart';
+
+class NewAdmissionScreen extends StatelessWidget {
+  NewAdmissionScreen({super.key});
+
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Consumer<RegisterDetailsForm>(
+          builder: (context, admissionModelPro, child) => Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                leading: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.yellowAccent,
+                    )),
+                backgroundColor: Colors.black.withOpacity(0.7300000190734863),
+                title: const Text(
+                  'Add Details',
+                  style: TextStyle(color: Colors.yellowAccent),
+                ),
+              ),
+              body: Container(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(
+                            'asset/img/karate-graduation-blackbelt-martial-arts.jpg'),
+                        fit: BoxFit.cover),
+                    gradient: LinearGradient(
+                      colors: [Colors.white, Colors.white38, Colors.white],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    )),
+                child: ListView(
+                  children: [
+                    Form(
+                      key: formKey,
+                      child: Column(
+                        children: [
+                          admissionModelPro.fileImage == null
+                              ? CircleAvatar(
+                                  radius: screenHight * 0.10,
+                                  backgroundImage:
+                                      const AssetImage('asset/img/PROFILE.png'),
+                                )
+                              : CircleAvatar(
+                                  backgroundImage: FileImage(
+                                    File(
+                                      admissionModelPro.fileImage!.path,
+                                    ),
+                                  ),
+                                  radius: screenHight / 10,
+                                ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: screenWidth * 0.25,
+                                right: screenWidth * 0.25),
+                            child: ElevatedButton(
+                              style: const ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStatePropertyAll(Colors.grey)),
+                              onPressed: () {
+                                admissionModelPro.getPhoto();
+                              },
+                              child: const Text('Select Image'),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: screenHight * 0.5,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.black38),
+                              child: TextFormFieldFormUpdate(),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: screenWidth * 0.25,
+                                right: screenWidth * 0.25),
+                            child: ElevatedButton(
+                              style: const ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStatePropertyAll(Colors.red)),
+                              onPressed: () async {
+                                if (formKey.currentState!.validate()) {
+                                  print('object');
+                                  await admissionModelPro
+                                      .updateFormRegister(context);
+                                }
+                                await admissionModelPro.clearFormData();
+                              },
+                              child: const SizedBox(
+                                  width: 150,
+                                  height: 35,
+                                  child: Center(
+                                      child: Text('        Submit        '))),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+        );
+      },
+    );
+  }
+}
