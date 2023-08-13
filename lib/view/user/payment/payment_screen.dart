@@ -16,6 +16,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   void initState() {
     // TODO: implement initState
+    _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
@@ -23,17 +24,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    // Do something when payment succeeds
+    // Payment was successful, handle the success data here
+    print("Payment Successful: ${response.paymentId}");
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    // Do something when payment fails
-    print('success');
+    // Payment failed, handle the failure data here
+    print("Payment Error: ${response.code} - ${response.message}");
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    // Do something when an external wallet was selected
-    print('faild');
+    // Handle external wallet events here (like PayTM, Google Pay, etc.)
+    print("External Wallet: ${response.walletName}");
   }
 
   TextEditingController paymentTextController = TextEditingController();

@@ -31,6 +31,7 @@ class Users(AbstractBaseUser,PermissionsMixin):
     profile_picture = models.ImageField(upload_to='profile_picture/', null=True)
     gender = models.CharField(choices=GENDERS, max_length=30, null=True)
     date_of_birth = models.DateField(verbose_name='Date of Birth', null=True)
+    age=models.IntegerField(null=True)
     guardian_name = models.CharField(max_length=120,null=True)
     guardian_contact_number = models.BigIntegerField(null=True)
     number = models.BigIntegerField(verbose_name='phone number', null=True)

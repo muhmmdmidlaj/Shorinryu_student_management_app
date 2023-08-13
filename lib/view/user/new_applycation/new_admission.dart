@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shorinryu/controller/provider/register_function_prov.dart';
+import 'package:shorinryu/controller/provider/user/user_profile_update/register_function_prov.dart';
 import 'package:shorinryu/view/user/new_applycation/widget/text_form_field.dart';
 import 'package:sizer/sizer.dart';
 
@@ -104,7 +104,7 @@ class NewAdmissionScreen extends StatelessWidget {
                                   await admissionModelPro
                                       .updateFormRegister(context);
                                 }
-                                await admissionModelPro.clearFormData();
+                                // await admissionModelPro.clearFormData();
                               },
                               child: const SizedBox(
                                   width: 150,

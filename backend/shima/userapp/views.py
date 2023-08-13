@@ -8,12 +8,13 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated,IsAdminUser
 from userapp.models import Users,leave_application
 from django.contrib.auth import authenticate
-from userapp.serializers import UserSerializer,leave_applicationSerializer
+from userapp.serializers import UserSerializer,leave_applicationSerializer,leave_applicationCreateSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from  userapp.utilities import genarate_otp
 from rest_framework_simplejwt.views import TokenRefreshView
-
+from rest_framework import viewsets
+from rest_framework.exceptions import ValidationError
 
 
 
@@ -65,77 +66,148 @@ class LoginView(APIView):
         return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     
 
-class leave_applicationListCreateView(ListCreateAPIView):
+# class leave_applicationListCreateView(ListCreateAPIView):
+#     queryset = leave_application.objects.all()
+#     serializer_class = leave_applicationSerializer
+#     permission_classes = [IsAuthenticated]
+
+# class leave_applicationRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+#     queryset = leave_application.objects.all()
+#     serializer_class = leave_applicationSerializer
+#     permission_classes = [IsAuthenticated]
+
+class LeaveApplicationCreateView(CreateAPIView):
+    queryset = leave_application.objects.all()
+    serializer_class = leave_applicationCreateSerializer
+
+class LeaveApplicationViewSet(viewsets.ModelViewSet):
     queryset = leave_application.objects.all()
     serializer_class = leave_applicationSerializer
-    permission_classes = [IsAuthenticated]
 
-class leave_applicationRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    queryset = leave_application.objects.all()
-    serializer_class = leave_applicationSerializer
-    permission_classes = [IsAuthenticated]
+# class LeaveApplicationViewSet(viewsets.ModelViewSet):
+#     queryset = leave_application.objects.all()
+#     serializer_class = leave_applicationSerializer
 
-
-
-
-
-class GetUserView(RetrieveAPIView):
-    serializer_class = UserSerializer
-    queryset = Users.objects.all()
-    permission_classes = [IsAuthenticated | IsAdminUser]
-
-    def get_object(self):
-        user_id = self.kwargs.get('id')  # Assuming the URL pattern captures the user ID
-        user = Users.objects.get(id=int(user_id))
-        if user.is_superuser or (user.id == self.request.user.id):
-            return user
+    def get_permissions(self):
+        if self.action in ['partial_update', 'retrieve']:
+            return [IsAuthenticated()]
+        elif self.action == 'create':
+            return [IsAuthenticated() | IsAdminUser() ]
         else:
-            self.permission_denied(self.request)
-
-
-class GetSelfUserView(RetrieveAPIView):
-    serializer_class = UserSerializer
-    queryset = Users.objects.all()
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user
+            return [IsAdminUser()]
     
-class AdminUserUpdateView(UpdateAPIView):
-    serializer_class = UserSerializer
-    queryset = Users.objects.all()
-    permission_classes = [IsAdminUser]
-    lookup_field = 'id'
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
 
-    def get_object(self):
-        user_id = self.kwargs.get('id')  # Assuming the URL pattern captures the user ID
-        user = Users.objects.get(id=int(user_id))
-        if user.is_superuser:
-            return user
+        # Check if the current user is the owner of the instance or an admin
+        if instance == request.user or request.user.is_superuser:
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
         else:
-            self.permission_denied(self.request)
+            raise ValidationError("You are not allowed to retrieve this user's data.")
+    
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
 
+        # Check if the current user is the owner of the instance or an admin
+        if instance == request.user or request.user.is_superuser:
+            return super().partial_update(request, *args, **kwargs)
+        else:
+            raise ValidationError("You are not allowed to update this user's data.")
+        
 
-class UpdateSelfUserView(UpdateAPIView):
-    serializer_class = UserSerializer
-    queryset = Users.objects.all()
-    permission_classes = [IsAuthenticated]
-    lookup_field = 'id'
-
-    def get_object(self):
-        return self.request.user
-
-class DeleteUserView(DestroyAPIView):
-    permission_classes = [IsAdminUser]
-    queryset = Users.objects.all()
-    serializer_class = UserSerializer
-    lookup_field = 'id'
-
-
-class GetAllUsersListView(ListAPIView):
-    permission_classes = [IsAdminUser]
+class UserViewSet(viewsets.ModelViewSet):
     queryset = Users.objects.all()
     serializer_class = UserSerializer
+    # permission_classes=[IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action in ['partial_update', 'retrieve']:
+            return [IsAuthenticated()]
+        elif self.action == 'create':
+            return [AllowAny()]
+        else:
+            return [IsAdminUser()]
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # Check if the current user is the owner of the instance or an admin
+        if instance == request.user or request.user.is_superuser:
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        else:
+            raise ValidationError("You are not allowed to retrieve this user's data.")
+    
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # Check if the current user is the owner of the instance or an admin
+        if instance == request.user or request.user.is_superuser:
+            return super().partial_update(request, *args, **kwargs)
+        else:
+            raise ValidationError("You are not allowed to update this user's data.")
+
+
+
+# class GetUserView(RetrieveAPIView):
+#     serializer_class = UserSerializer
+#     queryset = Users.objects.all()
+#     permission_classes = [IsAuthenticated | IsAdminUser]
+
+#     def get_object(self):
+#         user_id = self.kwargs.get('id')  # Assuming the URL pattern captures the user ID
+#         user = Users.objects.get(id=int(user_id))
+#         if user.is_superuser or (user.id == self.request.user.id):
+#             return user
+#         else:
+#             self.permission_denied(self.request)
+
+
+# class GetSelfUserView(RetrieveAPIView):
+#     serializer_class = UserSerializer
+#     queryset = Users.objects.all()
+#     permission_classes = [IsAuthenticated]
+
+#     def get_object(self):
+#         return self.request.user
+
+    
+# class AdminUserUpdateView(UpdateAPIView):
+#     serializer_class = UserSerializer
+#     queryset = Users.objects.all()
+#     permission_classes = [IsAdminUser]
+#     lookup_field = 'id'
+
+#     def get_object(self):
+#         user_id = self.kwargs.get('id')  # Assuming the URL pattern captures the user ID
+#         user = Users.objects.get(id=int(user_id))
+#         if user.is_superuser:
+#             return user
+#         else:
+#             self.permission_denied(self.request)
+
+
+# class UpdateSelfUserView(UpdateAPIView):
+#     serializer_class = UserSerializer
+#     queryset = Users.objects.all()
+#     permission_classes = [IsAuthenticated]
+#     lookup_field = 'id'
+
+#     def get_object(self):
+#         return self.request.user
+
+# class DeleteUserView(DestroyAPIView):
+#     permission_classes = [IsAdminUser]
+#     queryset = Users.objects.all()
+#     serializer_class = UserSerializer
+#     lookup_field = 'id'
+
+
+# class GetAllUsersListView(ListAPIView):
+#     permission_classes = [IsAdminUser]
+#     queryset = Users.objects.all()
+#     serializer_class = UserSerializer
     
 class UsersAPIView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -174,49 +246,49 @@ class UsersAPIView(APIView):
 #         else:
 #             self.permission_denied(self.request)
 
-class UsersDetailAPIView(APIView):
-    authentication_classes = [JWTAuthentication]
+# class UsersDetailAPIView(APIView):
+#     authentication_classes = [JWTAuthentication]
 
-    def get_authenticated_user(self, request):
-        authentication = JWTAuthentication()
-        user= authentication.authenticate(request)
-        return user
+#     def get_authenticated_user(self, request):
+#         authentication = JWTAuthentication()
+#         user= authentication.authenticate(request)
+#         return user
 
-    def get_object(self, pk):
-        try:
-            return Users.objects.get(pk=pk)
-        except Users.DoesNotExist:
-            return None
+#     def get_object(self, pk):
+#         try:
+#             return Users.objects.get(pk=pk)
+#         except Users.DoesNotExist:
+#             return None
 
-    def get(self, request, pk):
-        user = self.get_authenticated_user(request)
-        if user:
-            user_obj = self.get_object(pk)
-            if user_obj:
-                serializer = UserSerializer(user_obj)
-                return Response(serializer.data)
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+#     def get(self, request, pk):
+#         user = self.get_authenticated_user(request)
+#         if user:
+#             user_obj = self.get_object(pk)
+#             if user_obj:
+#                 serializer = UserSerializer(user_obj)
+#                 return Response(serializer.data)
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+#         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    def put(self, request, pk):
-        user = self.get_authenticated_user(request)
-        if user:
-            user_obj = self.get_object(pk)
-            if user_obj:
-                serializer = UserSerializer(user_obj, data=request.data)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data)
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+#     def put(self, request, pk):
+#         user = self.get_authenticated_user(request)
+#         if user:
+#             user_obj = self.get_object(pk)
+#             if user_obj:
+#                 serializer = UserSerializer(user_obj, data=request.data)
+#                 if serializer.is_valid():
+#                     serializer.save()
+#                     return Response(serializer.data)
+#                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+#         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    def delete(self, request, pk):
-        user = self.get_authenticated_user(request)
-        if user:
-            user_obj = self.get_object(pk)
-            if user_obj:
-                user_obj.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+#     def delete(self, request, pk):
+#         user = self.get_authenticated_user(request)
+#         if user:
+#             user_obj = self.get_object(pk)
+#             if user_obj:
+#                 user_obj.delete()
+#                 return Response(status=status.HTTP_204_NO_CONTENT)
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+#         return Response(status=status.HTTP_401_UNAUTHORIZED)

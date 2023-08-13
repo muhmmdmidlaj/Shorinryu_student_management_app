@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shorinryu/controller/provider/leave_appplication_provider/leave_apply_provi.dart';
+import 'package:shorinryu/controller/provider/user/leave_appplication_provider/leave_apply_provi.dart';
 import 'package:sizer/sizer.dart';
 
 class LeaveApplicationFormScreen extends StatelessWidget {
@@ -136,6 +136,7 @@ class LeaveApplicationFormScreen extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: TextFormField(
+                              textCapitalization: TextCapitalization.characters,
                               controller: leaveApplyProMod.leaveResonController,
                               maxLines: 20,
                               decoration: const InputDecoration(

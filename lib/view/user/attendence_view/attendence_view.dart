@@ -44,8 +44,8 @@ class AttendenceViewScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
-                        height: 120,
-                        width: 150,
+                        height: 20.h,
+                        width: 35.5.w,
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(149, 0, 0, 0),
                           borderRadius: BorderRadius.circular(20),
@@ -77,8 +77,8 @@ class AttendenceViewScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
-                        height: 120,
-                        width: 150,
+                        height: 20.h,
+                        width: 35.5.w,
                         decoration: BoxDecoration(
                             color: const Color.fromARGB(149, 0, 0, 0),
                             borderRadius: BorderRadius.circular(20)),

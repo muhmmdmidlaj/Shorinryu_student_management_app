@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer,ValidationError
 
 from userapp.models import Users,leave_application
 
@@ -26,6 +26,7 @@ class UserSerializer(ModelSerializer):
             'pincode',
             'post',
             'aadhar_number',
+            'age',
             # "_all_",
         ]
         extra_kwargs = {'password': {'write_only': True}}
@@ -38,16 +39,23 @@ class UserSerializer(ModelSerializer):
         user.save()
         return user
     
-    def update(self, instance, validated_data):
-        password = validated_data.pop('password', None)
-        if password:
-            instance.set_password(password)
-        return super().update(instance, validated_data)
+    # def validate(self, data):
+    #     # For PATCH request, ensure users can only update their own data
+    #     if self.context['request'].method == ['PATCH','GET']:
+    #         user = self.context['request'].user
+    #         if user.id == self.instance.id  or  user.is_superuser :
+    #             return data
+    #         raise ValidationError("You are not allowed to update these fields.")
     
     
     
 class leave_applicationSerializer(ModelSerializer):
+    user=UserSerializer()
     class Meta:
         model = leave_application
-        fields = ['id', 'user', 'start', 'end', 'reasone', 'is_approved']
-        read_only_fields = ['id']
+        fields = '__all__'
+
+class leave_applicationCreateSerializer(ModelSerializer):
+    class Meta:
+        model = leave_application
+        fields = '__all__'

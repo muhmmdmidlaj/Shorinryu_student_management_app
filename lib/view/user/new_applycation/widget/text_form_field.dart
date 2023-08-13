@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shorinryu/controller/provider/register_function_prov.dart';
+import 'package:shorinryu/controller/provider/user/user_profile_update/register_function_prov.dart';
 import 'package:shorinryu/view/user/new_applycation/widget/option_text_field.dart';
 
 // ignore: must_be_immutable

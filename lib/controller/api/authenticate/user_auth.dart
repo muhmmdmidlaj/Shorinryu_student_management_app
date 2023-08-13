@@ -1,9 +1,7 @@
 import 'dart:convert';
-// import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:shorinryu/model/error/error_model.dart';
 import 'package:shorinryu/model/core/base_url/base_url.dart';
 import 'package:shorinryu/view/admin/home/admin_home.dart';
 import 'package:shorinryu/view/login&register/login.dart';
@@ -24,7 +22,7 @@ Future<void> registerUser(Map<String, dynamic> userData, context) async {
 
     if (response.statusCode == 201) {
       prefs.setBool('loggind', true);
-      await prefs
+       prefs
           .setString('refreshKey', jsonDecode(response.body)['refresh'])
           .toString();
       prefs
@@ -34,7 +32,7 @@ Future<void> registerUser(Map<String, dynamic> userData, context) async {
       final userId = jsonDecode(response.body)['user']['id'].toString();
       // final String id = userData['id']; // Extract user ID
       await prefs.setString('userId', userId);
-      print(userId);
+      
 
       await prefs.setString('user', jsonEncode(userData));
 
@@ -43,7 +41,7 @@ Future<void> registerUser(Map<String, dynamic> userData, context) async {
         MaterialPageRoute(builder: (context) => const HomePageUser()),
         (route) => false,
       );
-      print('success');
+      
 
       // Show a success SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
@@ -93,7 +91,7 @@ Future<void> loginUser(Map<String, dynamic> loginData, context) async {
 
     if (response.statusCode == 200) {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('loggind', true);
+
       await prefs.setString('refreshKey', jsonDecode(response.body)['refresh']);
       await prefs.setString('accessKey', jsonDecode(response.body)['access']);
       final userData = jsonDecode(response.body)['user'];
@@ -105,15 +103,15 @@ Future<void> loginUser(Map<String, dynamic> loginData, context) async {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => AdminHomeScreen(),
+              builder: (context) =>const AdminHomeScreen(),
             ),
             (route) => false);
       }
 
-      print(userId);
-
+    
       // await prefs.setString('userId', jsonDecode(response.body)['user']['id']);
       if (isSuperUser == false) {
+        prefs.setBool('loggind', true);
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const HomePageUser()),

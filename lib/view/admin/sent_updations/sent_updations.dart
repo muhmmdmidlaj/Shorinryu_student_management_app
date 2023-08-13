@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shorinryu/controller/provider/admin/web_socket/web_socket_provider.dart';
+import 'package:shorinryu/controller/provider/websocket_api/websocket_api.dart';
 import 'package:sizer/sizer.dart';
 
 class AdminSentUpdationScreen extends StatelessWidget {
@@ -6,6 +9,7 @@ class AdminSentUpdationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final webSocketProvider = Provider.of<WebsocketProvider>(context);
     return Sizer(
       builder: (context, orientation, deviceType) {
         return Scaffold(
@@ -49,6 +53,7 @@ class AdminSentUpdationScreen extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: TextFormField(
+                          controller: webSocketProvider.notificationController,
                           decoration: const InputDecoration(
                               filled: true,
                               fillColor: Colors.transparent,
@@ -62,11 +67,18 @@ class AdminSentUpdationScreen extends StatelessWidget {
                     height: 15.h,
                   ),
                   ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.red)),
-                      onPressed: () {},
-                      child: Text("  Sent "))
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.red),
+                    ),
+                    onPressed: () async {
+                      if (webSocketProvider
+                          .notificationController.text.isNotEmpty) {
+                        webSocketProvider.webSocketSentMessage();
+                        webSocketProvider.dispose(); 
+                      }
+                    },
+                    child: Text("Sent"),
+                  ),
                 ],
               ),
             ],

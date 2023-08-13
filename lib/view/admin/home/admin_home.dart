@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shorinryu/controller/api/authenticate/user_auth.dart';
+import 'package:shorinryu/controller/provider/admin/admin_dilog_pro.dart';
 import 'package:shorinryu/view/admin/attendence/attendence_mark.dart';
 import 'package:shorinryu/view/admin/chat/chat_list/chat_list.dart';
 import 'package:shorinryu/view/admin/fee_updation/fee_updation.dart';
@@ -47,7 +49,8 @@ class AdminHomeScreen extends StatelessWidget {
               )),
               IconButton(
                   onPressed: () {
-                    logOut(context);
+                    Provider.of<AdminLogoutDilog>(context, listen: false)
+                        .adminShowLogoutConformContent(context);
                   },
                   icon: const Icon(
                     Icons.logout,
