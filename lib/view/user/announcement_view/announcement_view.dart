@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shorinryu/controller/provider/admin/web_socket/web_socket_provider.dart';
 import 'package:sizer/sizer.dart';
 
 class AnnouncementViewScreen extends StatelessWidget {
@@ -8,42 +10,49 @@ class AnnouncementViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Sizer(
       builder: (context, orientation, deviceType) {
-        return Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.yellowAccent,
-                )),
-            backgroundColor: Colors.black.withOpacity(0.7300000190734863),
-            title: const Text(
-              'Updations',
-              style: TextStyle(color: Colors.yellowAccent),
-            ),
-          ),
-          body: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(
-                    'asset/img/karate-graduation-blackbelt-martial-arts.jpg'),
+        return Consumer<WebsocketProvider>(
+          builder: (context, webSocketProvider, child) => Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.yellowAccent,
+                  )),
+              backgroundColor: Colors.black.withOpacity(0.7300000190734863),
+              title: const Text(
+                'Updations',
+                style: TextStyle(color: Colors.yellowAccent),
               ),
             ),
-            child: ListView.builder(
-              itemBuilder: (context, index) => Card(
-                child: ListTile(
-                  leading: const Icon(Icons.notifications),
-                  title: const Text('Content'),
-                  trailing: const Text('time/date'),
-                  onTap: () {
-                    showAnnouncementContent(context);
-                  },
+            body: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage(
+                      'asset/img/karate-graduation-blackbelt-martial-arts.jpg'),
                 ),
               ),
+              child: ListView.builder(
+                itemCount: webSocketProvider.receivedMessages.length,
+                itemBuilder: (context, index) {
+                  final message = webSocketProvider.receivedMessages[index];
+                  return Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.notifications),
+                      title: Text(message['message'] as String),
+                      trailing: const Text('time/date'),
+                      onTap: () {
+                        showAnnouncementContent(context);
+                      },
+                    ),
+                  );
+                },
+              ),
+            
             ),
           ),
         );

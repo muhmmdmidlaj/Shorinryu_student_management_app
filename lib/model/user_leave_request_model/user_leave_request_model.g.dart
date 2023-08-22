@@ -16,7 +16,7 @@ UserLeaveRequestModel _$UserLeaveRequestModelFromJson(
       start: json['start'] as String?,
       end: json['end'] as String?,
       reasone: json['reasone'] as String?,
-      isApproved: json['is_approved'] as bool?,
+      isApproved: json['is_approved']??false,
     );
 
 Map<String, dynamic> _$UserLeaveRequestModelToJson(

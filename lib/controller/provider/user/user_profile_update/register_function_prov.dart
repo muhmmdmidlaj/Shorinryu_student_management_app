@@ -9,7 +9,7 @@ import 'package:shorinryu/model/core/base_url/base_url.dart';
 
 class RegisterDetailsForm extends ChangeNotifier {
   File? image;
-
+   bool isFormFilled = true;
   File? fileImage;
   String? value;
 
@@ -62,23 +62,18 @@ class RegisterDetailsForm extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> marriegeStatus = ['True', 'False'];
-  String? selectedstatus;
-
-  void selectStatus(String newStatus) {
-    selectedstatus = newStatus;
-    notifyListeners();
-  }
-
   Future<void> updateFormRegister(context) async {
-    await registerUserForm(fileImage, selectedstatus, selectedOption, context);
+    await registerUserForm(fileImage, selectedOption, context);
   }
 
-  Future<void> registerUserForm(
-      File? image, String? gender, String? marriegeStatus, context) async {
+ 
+
+
+  Future<bool> registerUserForm(File? image, String? gender, context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('userId').toString();
     final accessKey = prefs.getString('accessKey').toString();
+    print(id);
 
     try {
       final request = http.MultipartRequest(
@@ -96,6 +91,7 @@ class RegisterDetailsForm extends ChangeNotifier {
         );
         request.files.add(pic);
       }
+      print(id);
 
       request.fields.addAll({
         'id': id,
@@ -104,32 +100,29 @@ class RegisterDetailsForm extends ChangeNotifier {
         'number': contactNumberController.text,
         'alternate_number': alternateNumberController.text,
         'guardian_contact_number': parentsNumberController.text,
-        // "gender": gender.toString(),
+        "gender": gender.toString(),
         'guardian_name': parentsNameController.text,
         'address': addressController.text,
         'pincode': pinNumberController.text,
         'post': postOfficeController.text,
         'aadhar_number': proofNumberConroller.text,
-        'age': ageController.text
-        // 'is_form_filled': "true"
+        'age': ageController.text,
+        'is_form_filled': isFormFilled.toString()
       });
       StreamedResponse res = await request.send();
 
       if (res.statusCode == 200) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.green,
-            content: Text('Registration Successful'),
-          ),
-        );
+        await clearFormData();
 
         print('success');
+        return true;
       } else {
         print('errrorr');
+
+        return false;
       }
     } catch (e) {
-      return;
+      return false;
     }
   }
 

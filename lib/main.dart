@@ -6,9 +6,13 @@ import 'package:shorinryu/controller/provider/admin/leave_rqst_get_provdr/leave_
 import 'package:shorinryu/controller/provider/admin/revenue_prov/revenue_prov.dart';
 import 'package:shorinryu/controller/provider/admin/user_get_details/user_details_get_prov.dart';
 import 'package:shorinryu/controller/provider/admin/web_socket/web_socket_provider.dart';
+import 'package:shorinryu/controller/provider/login&logout/login_provider.dart';
+import 'package:shorinryu/controller/provider/login&logout/logout_prov.dart';
+import 'package:shorinryu/controller/provider/register/register_provider.dart';
 import 'package:shorinryu/controller/provider/user/leave_appplication_provider/leave_apply_provi.dart';
+import 'package:shorinryu/controller/provider/user/user_leave_application_get.dart';
 import 'package:shorinryu/controller/provider/user/user_profile_update/register_function_prov.dart';
-import 'package:shorinryu/controller/provider/websocket_api/websocket_api.dart';
+// import 'package:shorinryu/controller/provider/websocket_api/websocket_api.dart';
 // import 'package:shorinryu/precentation/view/login&register/login.dart';
 import 'package:shorinryu/view/splash_screen/splash.dart';
 // import 'package:shorinryu/splash_screen/splash.dart';
@@ -27,11 +31,18 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RegisterDetailsForm()),
         ChangeNotifierProvider(create: (context) => LeaveApplyProvider()),
         ChangeNotifierProvider(create: (context) => AdminRevenueProvider()),
-        ChangeNotifierProvider(create: (context) => UserGetProvider()),
+        ChangeNotifierProvider(create: (context) => UserLeaveApplycationGet()),
         ChangeNotifierProvider(create: (context) => AdminLogoutDilog()),
         ChangeNotifierProvider(create: (context) => LeaveRequestGetProvider()),
-        ChangeNotifierProvider(create: (context) => AttandenceState()),
+        ChangeNotifierProvider(
+            create: (context) =>
+                UserGetProvider()), // Create UserGetProvider first
+        ChangeNotifierProvider(
+            create: (context) => AttandenceState(UserGetProvider())),
         ChangeNotifierProvider(create: (context) => WebsocketProvider()),
+        ChangeNotifierProvider(create: (context) => RegisterProvider()),
+        ChangeNotifierProvider(create: (context) => LoginProvier()),
+        ChangeNotifierProvider(create: (context) => LogOutProvider()),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shorinryu/controller/provider/login&logout/logout_prov.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../controller/api/authenticate/user_auth.dart';
 
@@ -78,7 +80,7 @@ class DrawerWidget extends StatelessWidget {
                     const Align(
                         alignment: Alignment.topCenter,
                         child: Padding(
-                          padding:  EdgeInsets.only(top: 30),
+                          padding: EdgeInsets.only(top: 30),
                           child: Text(
                             'Log out of your account?',
                             style: TextStyle(
@@ -91,7 +93,7 @@ class DrawerWidget extends StatelessWidget {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child:const Text(
+                          child: const Text(
                             'Cancel',
                             style: TextStyle(color: Colors.black),
                           )),
@@ -100,9 +102,10 @@ class DrawerWidget extends StatelessWidget {
                       alignment: Alignment.bottomRight,
                       child: TextButton(
                           onPressed: () {
-                            logOut(context);
+                            Provider.of<LogOutProvider>(context, listen: false)
+                                .logOut(context);
                           },
-                          child:const Text(
+                          child: const Text(
                             'Log Out',
                             style: TextStyle(color: Colors.red),
                           )),

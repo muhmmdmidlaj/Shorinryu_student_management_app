@@ -29,16 +29,30 @@ class LeaveRequestGetProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> leaveSubmitForm(context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final id = prefs.getString('userId').toString();
-    final accessKey = prefs.getString('accessKey').toString();
+  
+  Future<void> patchLeaveRequest(
+      var applicationId, UserLeaveRequestModel request) async {
+    Map<String, dynamic> data = {'is_approved': true};
 
-    Map<String, dynamic> leaveApplyData = {
-      "is_approved": true,
-    };
-    var url = '$baseUrl/user/leave-application/create/';
-    // ModelPostMethodClass leavemodl = ModelPostMethodClass();
-    
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final accessKey = prefs.getString('accessKey');
+    final response = await http.patch(
+      Uri.parse('$baseUrl/user/leave-applications/$applicationId/'),
+      body: jsonEncode(data),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessKey',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Update the isAccepted property
+      request.isApproved = true;
+      notifyListeners();
+
+      print('success');
+    } else {
+      print('error');
+    }
   }
 }

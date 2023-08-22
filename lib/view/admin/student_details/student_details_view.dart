@@ -144,7 +144,7 @@ class AdminStudntDetailsViewPage extends StatelessWidget {
                           'Parent Name :',
                           style: TextStyle(fontSize: 20),
                         ),
-                        title: Text(userData.guardianName),
+                        title: Text(userData.guardianName ?? 'nill'),
                       ),
                       ListTile(
                           leading: const Text(

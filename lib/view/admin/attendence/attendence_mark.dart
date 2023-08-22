@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorinryu/controller/provider/admin/atendance_provider/attandence_prov.dart';
 import 'package:shorinryu/controller/provider/admin/user_get_details/user_details_get_prov.dart';
 import 'package:shorinryu/model/users_get_model/users_get_model.dart';
@@ -47,6 +48,8 @@ class AdminAttendenceMarkScreen extends StatelessWidget {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (users.isEmpty) {
+                      return const Center(child: Text('No users available.'));
                     } else {
                       return Consumer<AttandenceState>(
                         builder: (context, attendanceProvider, child) =>
@@ -69,20 +72,25 @@ class AdminAttendenceMarkScreen extends StatelessWidget {
                                       onChanged: (newValue) {
                                         attendanceProvider.updateValue(
                                             index, newValue!);
+
                                         final now = DateTime.now();
                                         final formattedDate =
                                             '${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)}';
-                                        final data = {
-                                          'attendance_data': [
-                                            {
-                                              'user_id': userData.id,
-                                              'attendance_date': formattedDate,
-                                              'is_present': newValue,
-                                            },
-                                          ]
+
+                                        final attendanceData = {
+                                          'user_id': userData.id,
+                                          'attendance_date': formattedDate,
+                                          'is_present': newValue,
                                         };
-                                        attendanceProvider
-                                            .postAttendanceData(data);
+
+                                        if (newValue) {
+                                          attendanceProvider.addAttendanceData(
+                                              attendanceData);
+                                        } else {
+                                          attendanceProvider
+                                              .removeAttendanceData(
+                                                  userData.id as int);
+                                        }
                                       },
                                     ),
                                     leading: ClipOval(
@@ -110,25 +118,17 @@ class AdminAttendenceMarkScreen extends StatelessWidget {
                   },
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    final checkboxStates =
-                        attendanceProvider.getAllCheckboxStates();
-                    List<Map<String, dynamic>> attendanceDataList = [];
-                    checkboxStates.forEach((index, checkboxState) {
-                      final UsersGetModel userData = users[index];
-                      final now = DateTime.now();
-                      final formattedDate =
-                          '${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)}';
-                      attendanceDataList.add({
-                        'user_id': userData.id,
-                        'attendance_date': formattedDate,
-                        'is_present': checkboxState.value,
-                      });
-                    });
-                    final data = {
-                      'attendance_data': attendanceDataList,
-                    };
-                    attendanceProvider.postAttendanceData(data);
+                  onPressed: () async {
+                    final SharedPreferences prfrc =
+                        await SharedPreferences.getInstance();
+
+                    await attendanceProvider.postAttendanceData(
+                        attendanceProvider.attendanceDataList);
+                    if (prfrc.getBool('isAttantanceMark') == true) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Attendance Mark success full')));
+                    }
                   },
                   child: Text('Submit'),
                 ),

@@ -28,7 +28,7 @@ class LeaveApplyProvider extends ChangeNotifier {
       'end': enddateInputController.text,
       'reasone': leaveResonController.text.toString(),
     };
-    var url = '$baseUrl/user/leave-application/create/';
+    var url = '$baseUrl/user/leave-applications/';
     // ModelPostMethodClass leavemodl = ModelPostMethodClass();
     await postLeaveRequest(leaveApplyData, url, accessKey, context);
   }
@@ -77,5 +77,12 @@ class LeaveApplyProvider extends ChangeNotifier {
     }
     _endLeavedateInputController.text = _endselectedDate;
     notifyListeners();
+  }
+
+  leaveStatus(context) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    final leaveStatus = pref.getString('LeaveStatus');
+
+    return leaveStatus;
   }
 }

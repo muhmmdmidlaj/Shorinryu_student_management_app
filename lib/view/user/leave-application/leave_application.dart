@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorinryu/controller/provider/user/leave_appplication_provider/leave_apply_provi.dart';
 import 'package:sizer/sizer.dart';
 
@@ -163,10 +164,23 @@ class LeaveApplicationFormScreen extends StatelessWidget {
                             backgroundColor:
                                 MaterialStatePropertyAll(Colors.red)),
                         onPressed: () async {
+                          SharedPreferences pref =
+                              await SharedPreferences.getInstance();
+
                           if (leavFormKey.currentState!.validate()) {
                             await leaveApplyProMod.leaveSubmitForm(context);
+                            if (pref.getBool('leaveApply') == true) {
+                              // ignore: use_build_context_synchronously
+                              Navigator.pop(context);
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('Leave application Submitted'),
+                                backgroundColor: Colors.green,
+                              ));
+                            }
+                            await leaveApplyProMod.cleanSubmitData();
                           }
-                          await leaveApplyProMod.cleanSubmitData();
                         },
                         child: const SizedBox(
                           width: 100,

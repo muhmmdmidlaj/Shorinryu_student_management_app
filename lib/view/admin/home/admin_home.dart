@@ -23,12 +23,6 @@ class AdminHomeScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
-            leading: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.yellowAccent,
-                )),
             title: const Text(
               'Home',
               style: TextStyle(color: Colors.yellowAccent),
