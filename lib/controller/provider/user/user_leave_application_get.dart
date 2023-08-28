@@ -24,9 +24,11 @@ class UserLeaveApplycationGet extends ChangeNotifier {
       return jsonData
           .map((item) => UserLeaveRequestModel.fromJson(item))
           .toList();
-    
+
+     
     } else {
       throw Exception('Failed to load leave requests');
     }
+     
   }
 }

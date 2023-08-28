@@ -40,19 +40,16 @@ class AnnouncementViewScreen extends StatelessWidget {
                 itemCount: webSocketProvider.receivedMessages.length,
                 itemBuilder: (context, index) {
                   final message = webSocketProvider.receivedMessages[index];
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.notifications),
-                      title: Text(message['message'] as String),
-                      trailing: const Text('time/date'),
-                      onTap: () {
-                        showAnnouncementContent(context);
-                      },
-                    ),
+                  return StreamBuilder(
+                    stream: webSocketProvider.channel.stream,
+                    builder: (context, snapshot) {
+                      return Text(snapshot.hasData
+                          ? '${snapshot.data}'
+                          : message.toString());
+                    },
                   );
                 },
               ),
-            
             ),
           ),
         );

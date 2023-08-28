@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shorinryu/controller/provider/admin/web_socket/web_socket_provider.dart';
-// import 'package:shorinryu/controller/provider/websocket_api/websocket_api.dart';
+// import 'package:your_app_path/web_socket_provider.dart'; // Update with your actual import path
 import 'package:sizer/sizer.dart';
 
-// Make sure to import this
-
 class AdminSentUpdationScreen extends StatelessWidget {
-  const AdminSentUpdationScreen({Key? key})
-      : super(key: key); // Fixed the super constructor
+  const AdminSentUpdationScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,16 +69,33 @@ class AdminSentUpdationScreen extends StatelessWidget {
                   SizedBox(
                     height: 15.h,
                   ),
-                 ElevatedButton(
-                    onPressed: () {
-                      if (webSocketProvider.notificationController.text.isNotEmpty) {
-                        webSocketProvider.webSocketSentMessage();
-                        webSocketProvider.notificationController.clear();
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (webSocketProvider
+                          .notificationController.text.isNotEmpty) {
+                        final bool success =
+                            await webSocketProvider.webSocketSentMessage();
+                        webSocketProvider.postNotification();
+                        if (success) {
+                          webSocketProvider.notificationController.clear();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Notification sent successfully!'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Failed to send notification.'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
                       }
                     },
                     child: Text("Send"),
                   ),
-                 
                 ],
               ),
             ],

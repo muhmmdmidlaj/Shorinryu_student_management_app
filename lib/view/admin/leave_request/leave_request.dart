@@ -38,14 +38,14 @@ class AdminLeaveRequestViewScreen extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+                    return Text('Error: ${snapshot.error}');  
                   } else {
                     List<UserLeaveRequestModel> leaveRequests = snapshot.data!;
+                    leaveRequests = leaveRequests.reversed.toList();
 
                     return ListView.builder(
                       itemCount: leaveRequests.length,
                       itemBuilder: (context, index) {
-                        leaveRequests.reversed.toList();
                         final UserLeaveRequestModel request =
                             leaveRequests[index];
                         final User user = request.user!;

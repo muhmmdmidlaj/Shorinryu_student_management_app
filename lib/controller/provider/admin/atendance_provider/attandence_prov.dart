@@ -41,22 +41,27 @@ class AttandenceState extends ChangeNotifier {
       final accessKey = prefs.getString('accessKey');
       prfrc.setBool('isAttantanceMark', false);
 
+      // Update the 'is_present' value for each attendance data
+      final updatedAttendanceDataList = attendanceDataList.map((data) {
+        return {
+          ...data,
+          'is_present': _users[data['user_id']].value,
+        };
+      }).toList();
+
       final response = await http.post(
         Uri.parse('$baseUrl/user/attendance/mark_attendance_bulk/'),
         body: jsonEncode({
-          'attendance_data': attendanceDataList,
+          'attendance_data': updatedAttendanceDataList,
         }),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $accessKey',
         },
       );
-      print(attendanceDataList);
-      print(accessKey);
 
       if (response.statusCode == 200) {
         prfrc.setBool('isAttantanceMark', true);
-       
         print('Attendance data posted successfully');
       } else {
         print(

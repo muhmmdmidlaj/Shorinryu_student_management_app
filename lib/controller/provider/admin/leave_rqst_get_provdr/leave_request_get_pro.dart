@@ -16,6 +16,7 @@ class LeaveRequestGetProvider extends ChangeNotifier {
       Uri.parse('$baseUrl/user/leave-applications/'),
       headers: {
         'Authorization': 'Bearer $accessKey',
+        'Content-Type': 'application/json',
       },
     );
 

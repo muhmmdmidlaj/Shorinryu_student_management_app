@@ -30,7 +30,7 @@ class LeaveApplyProvider extends ChangeNotifier {
     };
     var url = '$baseUrl/user/leave-applications/';
     // ModelPostMethodClass leavemodl = ModelPostMethodClass();
-    await postLeaveRequest(leaveApplyData, url, accessKey, context);
+  await postLeaveRequest(leaveApplyData, url, accessKey, context);
   }
 
   cleanSubmitData() async {

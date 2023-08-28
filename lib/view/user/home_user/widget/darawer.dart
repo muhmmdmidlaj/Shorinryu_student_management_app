@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shorinryu/controller/provider/login&logout/logout_prov.dart';
 import 'package:sizer/sizer.dart';
-import '../../../../controller/api/authenticate/user_auth.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({super.key});

@@ -108,6 +108,58 @@ class AttendenceViewScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, bottom: 10),
+                      child: Container(
+                        height: 10.h,
+                        width: 35.5.w,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(149, 0, 0, 0),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'From Date',
+                              style: TextStyle(
+                                  color: Colors.yellowAccent, fontSize: 17),
+                            ),
+                            TextFormField(
+                              keyboardType: TextInputType.number,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          right: 20, left: 20, bottom: 10),
+                      child: Container(
+                        height: 10.h,
+                        width: 35.5.w,
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(149, 0, 0, 0),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Column(
+                          children: [
+                           const Text(
+                              'To Date',
+                              style: TextStyle(
+                                  color: Colors.yellowAccent, fontSize: 17),
+                            ),
+                            TextFormField(
+                              keyboardType: TextInputType.number,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
