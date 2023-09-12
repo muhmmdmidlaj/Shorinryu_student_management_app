@@ -1,8 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shorinryu/controller/provider/admin/web_socket/web_socket_provider.dart';
 import 'package:shorinryu/model/core/base_url/base_url.dart';
 
 class LoginProvier extends ChangeNotifier {
@@ -41,14 +42,16 @@ class LoginProvier extends ChangeNotifier {
         await prefs.setString('userId', userId);
         final isSuperUser = jsonDecode(response.body)['user']['is_superuser'];
         // await prefs.setString('isSuperUser', isSuperUser);
-
+        print(userId);
         // await prefs.setString('userId', jsonDecode(response.body)['user']['id']);
 
         if (isSuperUser == true) {
           prefs.setBool("isSuperUserlogInd", true);
+          print(userId);
         } else {
           prefs.setBool('isUserLogined', true);
         }
+         print(userId);
 
         notifyListeners();
         return true;

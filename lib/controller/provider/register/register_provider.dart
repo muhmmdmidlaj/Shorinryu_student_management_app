@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorinryu/model/core/base_url/base_url.dart';
-import 'package:shorinryu/view/user/home_user/home.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterProvider extends ChangeNotifier {
@@ -34,8 +33,10 @@ class RegisterProvider extends ChangeNotifier {
   }
 
   Future<bool> registerUser(Map<String, dynamic> userData, context) async {
-    const String apiUrl = '$baseUrl/user/register/';
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final id = await prefs.getString('userId');
+
+    String apiUrl = '$baseUrl/user/register/';
     // Convert user data to JSON
     final jsonData = json.encode(userData);
 
@@ -78,3 +79,6 @@ class RegisterProvider extends ChangeNotifier {
     }
   }
 }
+
+
+ 

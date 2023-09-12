@@ -1,6 +1,10 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:shorinryu/controller/provider/user/payment_provider/payment_provider.dart';
 import 'package:sizer/sizer.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -23,8 +27,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
     super.initState();
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    DateTime now = DateTime.now();
+    DateTime currentDate = DateTime(now.year, now.month, now.day);
+    String formattedCurrentMonth = DateFormat('yyyy-MM-dd').format(currentDate);
+    print(currentDate);
+    var paymentProvider = Provider.of<PaymentProvider>(context, listen: false);
+
+    await paymentProvider.postData(
+        response.paymentId.toString(), formattedCurrentMonth);
+
     // Payment was successful, handle the success data here
+    paymentProvider.paymentTextController.clear();
+    // ignore: use_build_context_synchronously
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.success,
+      text: "Payment Success Full!",
+    );
     print("Payment Successful: ${response.paymentId}");
   }
 
@@ -38,10 +58,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
     print("External Wallet: ${response.walletName}");
   }
 
-  TextEditingController paymentTextController = TextEditingController();
-
+  final paymentformKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final paymentProvider =
+        Provider.of<PaymentProvider>(context, listen: false);
+
     final screenHight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -89,20 +111,30 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(30.0),
-                      child: Card(
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          controller: paymentTextController,
-                          decoration: const InputDecoration(
-                              icon: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.payments_sharp,
-                                  color: Colors.grey,
+                      child: Form(
+                        key: paymentformKey,
+                        child: Card(
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller: paymentProvider.paymentTextController,
+                            decoration: const InputDecoration(
+                                icon: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.payments_sharp,
+                                    color: Colors.grey,
+                                  ),
                                 ),
-                              ),
-                              hintText: 'Enter Fees Amount',
-                              border: InputBorder.none),
+                                hintText: 'Enter Fees Amount',
+                                border: InputBorder.none),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Enter Amount';
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -114,19 +146,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             backgroundColor:
                                 MaterialStatePropertyAll(Colors.yellowAccent)),
                         onPressed: () {
-                          var options = {
-                            'key': 'rzp_test_g408urDfkHx1PE',
-                            'amount':
-                                (int.parse(paymentTextController.text) * 100),
-                            'name': 'Shorinryu',
-                            'description': 'Pay Fees',
-                            'timeout': 300,
-                            'prefill': {
-                              'contact': '9742588812',
-                              'email': 'muhammedmidlaj@gmail.com'
-                            }
-                          };
-                          _razorpay.open(options);
+                          if (paymentformKey.currentState!.validate() ||
+                              paymentProvider
+                                  .paymentTextController.text.isNotEmpty) {
+                            var options = {
+                              'key': 'rzp_test_g408urDfkHx1PE',
+                              'amount': (int.parse(paymentProvider
+                                      .paymentTextController.text) *
+                                  100),
+                              'name': 'Shorinryu',
+                              'description': 'Pay Fees',
+                              'timeout': 300,
+                              'prefill': {
+                                'contact': '9742588812',
+                                'email': 'muhammedmidlaj@gmail.com'
+                              }
+                            };
+                            _razorpay.open(options);
+                            CoolAlert.show(
+                              context: context,
+                              type: CoolAlertType.loading,
+                              text: "Loading...!",
+                              autoCloseDuration: const Duration(
+                                  seconds: 3), // Set the duration here
+                            );
+                          }
                         },
                         child: const Text(
                           '        Pay       ',

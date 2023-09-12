@@ -17,7 +17,7 @@ class LeaveApplyProvider extends ChangeNotifier {
   TextEditingController get enddateInputController =>
       _endLeavedateInputController;
 
-  Future<void> leaveSubmitForm(context) async {
+  Future<void> leaveSubmitForm() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('userId').toString();
     final accessKey = prefs.getString('accessKey').toString();
@@ -30,7 +30,7 @@ class LeaveApplyProvider extends ChangeNotifier {
     };
     var url = '$baseUrl/user/leave-applications/';
     // ModelPostMethodClass leavemodl = ModelPostMethodClass();
-  await postLeaveRequest(leaveApplyData, url, accessKey, context);
+  await postLeaveRequest(leaveApplyData, url, accessKey);
   }
 
   cleanSubmitData() async {

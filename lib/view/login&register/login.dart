@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shorinryu/controller/api/authenticate/user_auth.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:shorinryu/controller/provider/login&logout/login_provider.dart';
 import 'package:shorinryu/view/admin/home/admin_home.dart';
 import 'package:shorinryu/view/login&register/register.dart';
@@ -125,8 +125,7 @@ class LoginPage extends StatelessWidget {
                                     // ignore: use_build_context_synchronously
                                     await LoginProModel.loginSubmitForm(
                                         context);
-                                    // const Duration(seconds: 3);
-                                    // Check login result and show appropriate messages
+
                                     if (prefs.getBool('isUserLogined') ==
                                         true) {
                                       // ignore: use_build_context_synchronously
@@ -140,12 +139,10 @@ class LoginPage extends StatelessWidget {
                                       );
 
                                       // ignore: use_build_context_synchronously
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Login Successful'),
-                                          backgroundColor: Colors.green,
-                                        ),
+                                      CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.success,
+                                        text: "Login Success",
                                       );
                                     } else if (prefs
                                             .getBool('isSuperUserlogInd') ==
@@ -161,21 +158,17 @@ class LoginPage extends StatelessWidget {
                                       );
 
                                       // ignore: use_build_context_synchronously
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Login Successful'),
-                                          backgroundColor: Colors.green,
-                                        ),
+                                      CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.error,
+                                        text: "Login Fail!",
                                       );
                                     } else {
                                       // ignore: use_build_context_synchronously
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Login failed'),
-                                          backgroundColor: Colors.red,
-                                        ),
+                                      CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.error,
+                                        text: "Login Fail!",
                                       );
                                     }
                                   }

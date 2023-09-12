@@ -74,8 +74,8 @@ class AdminSentUpdationScreen extends StatelessWidget {
                       if (webSocketProvider
                           .notificationController.text.isNotEmpty) {
                         final bool success =
-                            await webSocketProvider.webSocketSentMessage();
-                        webSocketProvider.postNotification();
+                            await webSocketProvider.postNotification();
+
                         if (success) {
                           webSocketProvider.notificationController.clear();
                           ScaffoldMessenger.of(context).showSnackBar(

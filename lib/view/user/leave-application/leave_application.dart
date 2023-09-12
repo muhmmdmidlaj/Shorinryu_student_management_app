@@ -1,7 +1,9 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorinryu/controller/provider/user/leave_appplication_provider/leave_apply_provi.dart';
+import 'package:shorinryu/controller/provider/user/user_leave_application_get.dart';
 import 'package:sizer/sizer.dart';
 
 class LeaveApplicationFormScreen extends StatelessWidget {
@@ -12,6 +14,8 @@ class LeaveApplicationFormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHight = MediaQuery.of(context).size.height;
+    final leavegetPro =
+        Provider.of<UserLeaveApplycationGet>(context, listen: false);
     return Sizer(
       builder: (context, orientation, deviceType) {
         return Consumer<LeaveApplyProvider>(
@@ -168,18 +172,27 @@ class LeaveApplicationFormScreen extends StatelessWidget {
                               await SharedPreferences.getInstance();
 
                           if (leavFormKey.currentState!.validate()) {
-                            await leaveApplyProMod.leaveSubmitForm(context);
+                            // ignore: use_build_context_synchronously
+                            await leaveApplyProMod.leaveSubmitForm();
                             if (pref.getBool('leaveApply') == true) {
                               // ignore: use_build_context_synchronously
                               Navigator.pop(context);
                               // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text('Leave application Submitted'),
-                                backgroundColor: Colors.green,
-                              ));
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.success,
+                                text: "Application Submitted",
+                              );
+                            } else {
+                              // ignore: use_build_context_synchronously
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.error,
+                                text: "Submission Fail",
+                              );
                             }
                             await leaveApplyProMod.cleanSubmitData();
+                            leavegetPro.userFetchLeaveRequests();
                           }
                         },
                         child: const SizedBox(

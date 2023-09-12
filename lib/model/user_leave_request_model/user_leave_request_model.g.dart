@@ -12,11 +12,11 @@ UserLeaveRequestModel _$UserLeaveRequestModelFromJson(
       id: json['id'] as int?,
       user: json['user'] == null
           ? null
-          : User.fromJson(json['user'] as Map<String, dynamic>),
+          : UsersGetModel.fromJson(json['user'] as Map<String, dynamic>),
       start: json['start'] as String?,
       end: json['end'] as String?,
       reasone: json['reasone'] as String?,
-      isApproved: json['is_approved']??false,
+      isApproved: json['is_approved'] as bool?,
     );
 
 Map<String, dynamic> _$UserLeaveRequestModelToJson(

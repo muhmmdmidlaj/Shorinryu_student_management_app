@@ -5,40 +5,47 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorinryu/model/core/base_url/base_url.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../../../../model/notification_model/notification_get_model.dart';
+
 class WebsocketProvider extends ChangeNotifier {
   TextEditingController notificationController = TextEditingController();
-
+  int notificationCount = 0;
   late final WebSocketChannel channel;
   List<Map<String, dynamic>> receivedMessages = [];
 
-  WebsocketProvider() {
-    channel = WebSocketChannel.connect(
-      Uri.parse('ws://172.20.10.3:8000/ws/notifications/'),
-    );
+  Future<void> initializeWebSocket(String accessKey) async {
+    try {
+      final uri =
+          Uri.parse('ws://10.4.5.143:8000/ws/notifications/?token=$accessKey');
+      channel = WebSocketChannel.connect(uri);
+      // ignore: unused_local_variable
 
-    // Listen to incoming messages and add them to receivedMessages
-    channel.stream.listen((data) {
-      if (data is Map<String, dynamic> && data['type'] == 'notification') {
-        receivedMessages.add(data);
+      // Listen to incoming messages and filter by "action"
+      channel.stream.listen((data) {
+        if (data is Map<String, dynamic> &&
+            data['action'] == 'see_notification') {
+          receivedMessages.add(data);
 
-        notifyListeners(); // Notify listeners about new messages
-      }
-    });
+          notifyListeners(); // Notify listeners about new messages
+        }
+        if (data is Map<String, dynamic> &&
+            data['action'] == 'see_notification') {
+          receivedMessages.add(data);
+
+          // Update notification count when a new notification is received
+          notificationCount++;
+
+          notifyListeners(); // Notify listeners about new messages
+        }
+      });
+    } catch (e) {
+      print('WebSocket connection error: $e');
+    }
   }
 
-  Future<bool> webSocketSentMessage() async {
-    if (notificationController.text.isNotEmpty) {
-      try {
-        channel.sink.add({
-          "type": "notification",
-          "message": notificationController.text.toString(),
-        });
-        return true; // Successful sending
-      } catch (e) {
-        print('Error sending notification: $e');
-      }
-    }
-    return false; // Failed sending
+  void sendDataToWebSocket() {
+    // final {"action": "see_notification"} = jsonEncode({"action": "see_notification"}); // Convert the Map to a JSON string
+    channel.sink.add({"action": "see_notification"});
   }
 
   @override
@@ -76,6 +83,34 @@ class WebsocketProvider extends ChangeNotifier {
     } catch (e) {
       print(e);
       return false;
+    }
+  }
+
+  
+  List<Message> messages = [];
+  Future<List<Message>> fetchNotification() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final accessKey = prefs.getString('accessKey');
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/sockets/notification/get'),
+        headers: {
+          'Authorization': 'Bearer $accessKey',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+        messages = jsonData.map((item) => Message.fromJson(item)).toList();
+        return messages;
+      } else {
+        throw Exception('Failed to load leave requests');
+      }
+    } catch (e) {
+      
+      return []; 
     }
   }
 }

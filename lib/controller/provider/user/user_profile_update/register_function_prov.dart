@@ -9,7 +9,7 @@ import 'package:shorinryu/model/core/base_url/base_url.dart';
 
 class RegisterDetailsForm extends ChangeNotifier {
   File? image;
-   bool isFormFilled = true;
+  bool isFormFilled = true;
   File? fileImage;
   String? value;
 
@@ -66,13 +66,11 @@ class RegisterDetailsForm extends ChangeNotifier {
     await registerUserForm(fileImage, selectedOption, context);
   }
 
- 
-
-
   Future<bool> registerUserForm(File? image, String? gender, context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('userId').toString();
     final accessKey = prefs.getString('accessKey').toString();
+    prefs.setBool('isformFilled', false);
     print(id);
 
     try {
@@ -112,6 +110,8 @@ class RegisterDetailsForm extends ChangeNotifier {
       StreamedResponse res = await request.send();
 
       if (res.statusCode == 200) {
+        prefs.setBool('isformFilled', true);
+
         await clearFormData();
 
         print('success');

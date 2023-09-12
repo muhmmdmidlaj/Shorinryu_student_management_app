@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shorinryu/controller/api/authenticate/user_auth.dart';
 import 'package:shorinryu/controller/provider/admin/admin_dilog_pro.dart';
+import 'package:shorinryu/controller/provider/admin/revenue_prov/revenue_prov.dart';
+import 'package:shorinryu/controller/provider/admin/revenue_provider/revenue_provider.dart';
+import 'package:shorinryu/controller/provider/chat_wbsocket_provider/chat_websocket_privider.dart';
 import 'package:shorinryu/view/admin/attendence/attendence_mark.dart';
 import 'package:shorinryu/view/admin/chat/chat_list/chat_list.dart';
 import 'package:shorinryu/view/admin/fee_updation/fee_updation.dart';
@@ -16,7 +19,9 @@ class AdminHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Sizer(
+    Provider.of<ChatWebsocketProvider>(context, listen: false)
+        .chatWebInitiolizer();
+    return Sizer( 
       builder: (context, orientation, deviceType) {
         return Scaffold(
           appBar: AppBar(
@@ -97,51 +102,52 @@ class AdminHomeScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AdminAttendenceMarkScreen(),
-                          ));
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    child: Container(
-                      width: 40.w,
-                      height: 20.h,
-                      decoration: BoxDecoration(
-                          color: Colors.white30,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: const Column(children: [
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.monetization_on,
-                            size: 55,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Text(
-                            'Fee Updation',
-                            style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                            textAlign: TextAlign.center,
-                          ),
-                        )
-                      ]),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
                             builder: (context) =>
-                                const FeeUpadationStatusScreen(),
+                                const AdminAttendenceMarkScreen(),
                           ));
                     },
                   ),
                 ),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: GestureDetector(
+                //     child: Container(
+                //       width: 40.w,
+                //       height: 20.h,
+                //       decoration: BoxDecoration(
+                //           color: Colors.white30,
+                //           borderRadius: BorderRadius.circular(20)),
+                //       child: const Column(children: [
+                //         Padding(
+                //           padding: EdgeInsets.all(8.0),
+                //           child: Icon(
+                //             Icons.monetization_on,
+                //             size: 55,
+                //           ),
+                //         ),
+                //         Padding(
+                //           padding: EdgeInsets.all(15.0),
+                //           child: Text(
+                //             'Fee Updation',
+                //             style: TextStyle(
+                //                 fontSize: 25,
+                //                 fontWeight: FontWeight.bold,
+                //                 color: Colors.black),
+                //             textAlign: TextAlign.center,
+                //           ),
+                //         )
+                //       ]),
+                //     ),
+                //     onTap: () {
+                //       Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //             builder: (context) =>
+                //                 const FeeUpadationStatusScreen(),
+                //           ));
+                //     },
+                //   ),
+                // ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
@@ -214,6 +220,8 @@ class AdminHomeScreen extends StatelessWidget {
                       ]),
                     ),
                     onTap: () {
+                      // Provider.of<ChatWebSocketProvider>(context, listen: false)
+                      //     .inisialazeChatWebsocket();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -295,6 +303,24 @@ class AdminHomeScreen extends StatelessWidget {
                       ]),
                     ),
                     onTap: () {
+                      DateTime now = DateTime.now();
+                      DateTime currentMonthStart =
+                          DateTime(now.year, now.month, 1);
+                      DateTime currentDate =
+                          DateTime(now.year, now.month, now.day);
+
+// Splitting date and time components
+                      String formattedCurrentMonthStart =
+                          DateFormat('yyyy-MM-dd').format(currentMonthStart);
+                      String formattedCurrentDate =
+                          DateFormat('yyyy-MM-dd').format(currentDate);
+
+                      Provider.of<RevenueProvider>(context, listen: false)
+                          .fetchPayment();
+                      Provider.of<AdminRevenueProvider>(context, listen: false)
+                          .fetchCalculate(
+                              formattedCurrentMonthStart, formattedCurrentDate);
+
                       Navigator.push(
                           context,
                           MaterialPageRoute(

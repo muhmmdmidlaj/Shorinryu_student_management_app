@@ -32,6 +32,7 @@ UsersGetModel _$UsersGetModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$UsersGetModelToJson(UsersGetModel instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'age': instance.age,
       'name': instance.name,
       'profile_picture': instance.profilePicture,
       'date_of_birth': instance.dateOfBirth,
@@ -49,5 +50,4 @@ Map<String, dynamic> _$UsersGetModelToJson(UsersGetModel instance) =>
       'pincode': instance.pincode,
       'post': instance.post,
       'aadhar_number': instance.aadharNumber,
-      'age': instance.age,
     };

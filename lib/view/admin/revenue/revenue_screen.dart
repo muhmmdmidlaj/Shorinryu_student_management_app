@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shorinryu/controller/provider/admin/revenue_prov/revenue_prov.dart';
+import 'package:shorinryu/controller/provider/admin/revenue_provider/revenue_provider.dart';
+import 'package:shorinryu/model/payment_model/payment_model.dart';
 import 'package:sizer/sizer.dart';
 
 class AdminRevenueScreen extends StatelessWidget {
@@ -8,10 +10,12 @@ class AdminRevenueScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final paymentProv = Provider.of<RevenueProvider>(context, listen: false);
     return Sizer(
       builder: (context, orientation, deviceType) {
         return Consumer<AdminRevenueProvider>(
-          builder: (context, modelRevPro, child) => Scaffold(
+            builder: (context, modelRevPro, child) {
+          return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -52,7 +56,7 @@ class AdminRevenueScreen extends StatelessWidget {
                       child: Center(
                         child: Stack(
                           children: [
-                            const Align(
+                            Align(
                               alignment: Alignment.topCenter,
                               child: Padding(
                                 padding: EdgeInsets.all(30.0),
@@ -64,13 +68,36 @@ class AdminRevenueScreen extends StatelessWidget {
                                       color: Color.fromARGB(255, 0, 255, 8),
                                       size: 45,
                                     ),
-                                    Text(
-                                      '380000',
-                                      style: TextStyle(
-                                        color: Colors.yellowAccent,
-                                        fontSize: 30,
-                                      ),
-                                    ),
+                                    FutureBuilder(
+                                        future: modelRevPro.fetchCalculate(
+                                            modelRevPro.fromselectedDate,
+                                            modelRevPro.toselectedDate),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          } else if (snapshot.hasError) {
+                                            return Text(
+                                                'Error: ${snapshot.error}');
+                                          } else if (!snapshot.hasData) {
+                                            return const Center(
+                                                child:
+                                                    Text('No data available.'));
+                                          } else {
+                                            final revenueData = snapshot.data!;
+
+                                            return Text(
+                                              revenueData.totalRevenue
+                                                  .toString(),
+                                              style: TextStyle(
+                                                color: Colors.yellowAccent,
+                                                fontSize: 30,
+                                              ),
+                                            );
+                                          }
+                                        }),
                                   ],
                                 ),
                               ),
@@ -155,7 +182,12 @@ class AdminRevenueScreen extends StatelessWidget {
                                     ),
                                   ),
                                   TextButton(
-                                      onPressed: () {}, child: Text('show'))
+                                      onPressed: () {
+                                        modelRevPro.fetchCalculate(
+                                            modelRevPro.fromselectedDate,
+                                            modelRevPro.toselectedDate);
+                                      },
+                                      child: Text('show'))
                                 ],
                               ),
                             )
@@ -166,42 +198,37 @@ class AdminRevenueScreen extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return const Card(
-                          shadowColor: Colors.grey,
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.attach_money_sharp,
-                              color: Colors.green,
+                  child: Consumer<RevenueProvider>(
+                    builder: (context, messageProvider, _) {
+                      final revenue = messageProvider.revenue;
+
+                      return ListView.builder(
+                        itemCount: revenue.length,
+                        reverse: true,
+                        itemBuilder: (context, index) {
+                          final request = revenue[index];
+
+                          // Check if the message is sent by the current user
+                          // ignore: unrelated_type_equality_checks
+                          // final isMyMessage = userId;
+                          return Card(
+                            child: ListTile(
+                              leading: Text(request.paymentDate),
+                              title: Text(
+                                  request.user.name.toString().toUpperCase()),
+                              subtitle: Text(request.paymentId),
+                              trailing: Text(request.amount),
                             ),
-                            title: Text('User Name'),
-                            trailing: Column(
-                              children: [
-                                Flexible(
-                                    child: Text(
-                                  '+4000',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: Color.fromARGB(255, 34, 235, 41)),
-                                )),
-                                Flexible(
-                                    child: Text(
-                                  '14/05/2023',
-                                  style: TextStyle(
-                                      fontSize: 10, color: Colors.grey),
-                                )),
-                              ],
-                            ),
-                          ));
+                          );
+                        },
+                      );
                     },
                   ),
                 )
               ],
             ),
-          ),
-        );
+          );
+        });
       },
     );
   }

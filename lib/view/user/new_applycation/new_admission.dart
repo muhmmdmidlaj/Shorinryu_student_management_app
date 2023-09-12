@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorinryu/controller/provider/user/user_profile_update/register_function_prov.dart';
 import 'package:shorinryu/view/user/new_applycation/widget/text_form_field.dart';
 import 'package:sizer/sizer.dart';
@@ -87,7 +88,7 @@ class NewAdmissionScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   color: Colors.black38),
-                              child: TextFormFieldFormUpdate(),
+                              child: const TextFormFieldFormUpdate(),
                             ),
                           ),
                           Padding(
@@ -99,10 +100,34 @@ class NewAdmissionScreen extends StatelessWidget {
                                   backgroundColor:
                                       MaterialStatePropertyAll(Colors.red)),
                               onPressed: () async {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+
                                 if (formKey.currentState!.validate()) {
-                                  print('object');
+                                  // ignore: use_build_context_synchronously
                                   await admissionModelPro
                                       .updateFormRegister(context);
+                                  if (prefs.getBool('isformFilled') == true) {
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.pop(context);
+
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    const  SnackBar(
+                                        content: Text('Success'),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  } else {
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    const  SnackBar(
+                                        content:
+                                            Text('Faild: Check The Details '),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
                                 }
                                 // await admissionModelPro.clearFormData();
                               },

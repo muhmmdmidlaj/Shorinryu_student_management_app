@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shorinryu/controller/provider/admin/web_socket/web_socket_provider.dart';
+import 'package:shorinryu/model/notification_model/notification_get_model.dart';
 import 'package:sizer/sizer.dart';
 
 class AnnouncementViewScreen extends StatelessWidget {
@@ -8,6 +9,7 @@ class AnnouncementViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final websocketPro = Provider.of<WebsocketProvider>(context);
     return Sizer(
       builder: (context, orientation, deviceType) {
         return Consumer<WebsocketProvider>(
@@ -36,18 +38,42 @@ class AnnouncementViewScreen extends StatelessWidget {
                       'asset/img/karate-graduation-blackbelt-martial-arts.jpg'),
                 ),
               ),
-              child: ListView.builder(
-                itemCount: webSocketProvider.receivedMessages.length,
-                itemBuilder: (context, index) {
-                  final message = webSocketProvider.receivedMessages[index];
-                  return StreamBuilder(
-                    stream: webSocketProvider.channel.stream,
-                    builder: (context, snapshot) {
-                      return Text(snapshot.hasData
-                          ? '${snapshot.data}'
-                          : message.toString());
-                    },
-                  );
+              child: FutureBuilder<List<Message>>(
+                future: websocketPro.fetchNotification(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    List announcementList = snapshot.data!;
+
+                    return ListView.builder(
+                      itemCount: announcementList.length,
+                      itemBuilder: (context, index) {
+                        announcementList = announcementList.reversed.toList();
+
+                        final Message request = announcementList[index];
+
+                        return Card(
+                          child: ListTile(
+                            leading: Text(""),
+                            title: Text(request.contentMessage.toString()),
+                            // subtitle: Text(
+                            //     'Start: ${request.start} \n End: ${request.end}'),
+                            trailing: Text(
+                              '',
+                              style: TextStyle(),
+                            ),
+                            onTap: () {
+                              showAnnouncementContent(
+                                  context, request.contentMessage.toString());
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),
@@ -57,17 +83,12 @@ class AnnouncementViewScreen extends StatelessWidget {
     );
   }
 
-  void showAnnouncementContent(context) {
+  void showAnnouncementContent(context, String content) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            actions: [
-              Container(
-                height: 200,
-                width: 200,
-              )
-            ],
+            actions: [Center(child: Text(content))],
           );
         });
   }

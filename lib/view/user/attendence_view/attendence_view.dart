@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shorinryu/controller/provider/user/attandance_get_provider/attandance_get_provider.dart';
 import 'package:sizer/sizer.dart';
 
 class AttendenceViewScreen extends StatelessWidget {
@@ -6,6 +8,8 @@ class AttendenceViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final attandanceProvider = Provider.of<AttandanceGetProvider>(context);
+
     return Sizer(
       builder: (context, orientation, deviceType) {
         return Scaffold(
@@ -50,9 +54,9 @@ class AttendenceViewScreen extends StatelessWidget {
                           color: const Color.fromARGB(149, 0, 0, 0),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Column(
+                        child: Column(
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text(
                                 'Precent Days',
@@ -61,10 +65,10 @@ class AttendenceViewScreen extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                '65',
-                                style: TextStyle(
+                                attandanceProvider.presentCount.toString(),
+                                style: const TextStyle(
                                     color: Color.fromARGB(255, 1, 255, 9),
                                     fontSize: 35,
                                     fontWeight: FontWeight.w800),
@@ -82,9 +86,9 @@ class AttendenceViewScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: const Color.fromARGB(149, 0, 0, 0),
                             borderRadius: BorderRadius.circular(20)),
-                        child: const Column(
+                        child: Column(
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text(
                                 'Absent Days',
@@ -93,10 +97,10 @@ class AttendenceViewScreen extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                '10',
-                                style: TextStyle(
+                                attandanceProvider.absentCount.toString(),
+                                style: const TextStyle(
                                     color: Color.fromARGB(255, 255, 17, 0),
                                     fontSize: 35,
                                     fontWeight: FontWeight.w800),
@@ -129,7 +133,23 @@ class AttendenceViewScreen extends StatelessWidget {
                                   color: Colors.yellowAccent, fontSize: 17),
                             ),
                             TextFormField(
+                              controller:
+                                  attandanceProvider.startdateInputController,
+                              decoration:
+                                  InputDecoration(border: InputBorder.none),
+                              style: TextStyle(color: Colors.yellowAccent),
                               keyboardType: TextInputType.number,
+                              onTap: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1950),
+                                  lastDate: DateTime(2101),
+                                );
+
+                                attandanceProvider.StartUpdateSelectedDate(
+                                    pickedDate!);
+                              },
                             )
                           ],
                         ),
@@ -146,13 +166,29 @@ class AttendenceViewScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           children: [
-                           const Text(
+                            const Text(
                               'To Date',
                               style: TextStyle(
                                   color: Colors.yellowAccent, fontSize: 17),
                             ),
                             TextFormField(
+                              controller:
+                                  attandanceProvider.endDateInputController,
+                              decoration:
+                                 const InputDecoration(border: InputBorder.none),
+                              style:const TextStyle(color: Colors.yellowAccent),
                               keyboardType: TextInputType.number,
+                              onTap: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1950),
+                                  lastDate: DateTime(2101),
+                                );
+
+                                attandanceProvider.EndUpdateSelectedDate(
+                                    pickedDate!);
+                              },
                             )
                           ],
                         ),
@@ -160,6 +196,15 @@ class AttendenceViewScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                ElevatedButton(
+                    style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(Colors.red)),
+                    onPressed: () async {
+                      await attandanceProvider.fetchAttandence(
+                          attandanceProvider.startdateInputController.text,
+                          attandanceProvider.endDateInputController.text);
+                    },
+                    child:const Text('Get')),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -169,31 +214,32 @@ class AttendenceViewScreen extends StatelessWidget {
                         color: const Color.fromARGB(185, 0, 0, 0),
                         borderRadius: BorderRadius.circular(20)),
                     child: ListView.builder(
-                      itemCount: 20,
-                      itemBuilder: (context, index) => const ListTile(
-                        leading: Text(
-                          '15',
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.yellowAccent,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Text(
-                          'Present',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color.fromARGB(255, 0, 255, 8),
-                          ),
-                        ),
-                        title: Text(
-                          'March 2023',
-                          style: TextStyle(
-                            fontSize: 19,
-                            color: Colors.yellowAccent,
-                          ),
-                        ),
-                      ),
-                    ),
+                        shrinkWrap: true,
+                        itemCount: attandanceProvider.attendanceRecords.length,
+                        itemBuilder: (context, index) {
+                          final record =
+                              attandanceProvider.attendanceRecords[index];
+                          return ListTile(
+                            leading: Text(
+                              record
+                                  .date, // Assuming date is a property in your AttendanceRecord
+                              style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.yellowAccent,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            trailing: Text(
+                              record.isPresent ? 'Present' : 'Absent',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: record.isPresent
+                                    ? Color.fromARGB(255, 0, 255, 8)
+                                    : Color.fromARGB(255, 255, 0, 0),
+                              ),
+                            ),
+                          );
+                        }),
                   ),
                 )
               ]),

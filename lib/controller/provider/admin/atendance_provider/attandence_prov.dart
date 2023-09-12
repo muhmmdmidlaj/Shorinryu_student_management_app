@@ -24,7 +24,7 @@ class AttandenceState extends ChangeNotifier {
 
   List<CheckboxState> get users => _users;
   void updateValue(int index, bool newValue) {
-    _users[index].value = newValue;
+    _users[index].value = newValue; // Set the value to true
     notifyListeners();
   }
 
@@ -49,8 +49,8 @@ class AttandenceState extends ChangeNotifier {
         };
       }).toList();
 
-      final response = await http.post(
-        Uri.parse('$baseUrl/user/attendance/mark_attendance_bulk/'),
+      final response = await http.patch(
+        Uri.parse('$baseUrl/user/attendance/patch_attendance_bulk/'),
         body: jsonEncode({
           'attendance_data': updatedAttendanceDataList,
         }),

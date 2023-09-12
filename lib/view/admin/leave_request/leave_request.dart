@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shorinryu/controller/provider/admin/leave_rqst_get_provdr/leave_request_get_pro.dart';
 // import 'package:shorinryu/model/leave_request_get_model/leave_request_get_model.dart';
-import 'package:shorinryu/model/user_leave_request_model/user.dart';
 import 'package:shorinryu/model/user_leave_request_model/user_leave_request_model.dart';
+import 'package:shorinryu/model/users_get_model/users_get_model.dart';
 // import 'package:shorinryu/model/leave_request_get_model/leave_request_get_model.dart';
 import 'package:sizer/sizer.dart';
 
@@ -48,7 +48,7 @@ class AdminLeaveRequestViewScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final UserLeaveRequestModel request =
                             leaveRequests[index];
-                        final User user = request.user!;
+                        final UsersGetModel user = request.user!;
 
                         return ListTile(
                           leading: ClipOval(

@@ -1,5 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shorinryu/model/calculate_revenue_model/calculate_revenue_model.dart';
+import 'package:shorinryu/model/core/base_url/base_url.dart';
+import 'package:http/http.dart' as http;
 
 class AdminRevenueProvider extends ChangeNotifier {
   final TextEditingController _fromLeavedateInputController =
@@ -7,7 +12,7 @@ class AdminRevenueProvider extends ChangeNotifier {
   TextEditingController get fromdateInputController =>
       _fromLeavedateInputController;
 
-        final TextEditingController _toLeavedateInputController =
+  final TextEditingController _toLeavedateInputController =
       TextEditingController();
   TextEditingController get todateInputController =>
       _toLeavedateInputController;
@@ -52,4 +57,33 @@ class AdminRevenueProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // List<RevenueData> revenueRecord = [];
+  Future<RevenueData> fetchCalculate(String startDate, String endDate) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final accessKey = prefs.getString('accessKey');
+
+    final Map<String, dynamic> requestData = {
+      'start_date': startDate,
+      'end_date': endDate,
+    };
+
+    final Uri uri = Uri.parse('$baseUrl/user/payment/calculate_revenue/')
+        .replace(queryParameters: requestData);
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $accessKey',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      notifyListeners();
+      return RevenueData.fromJson(jsonData);
+    } else {
+      throw Exception('Failed to load attendance records');
+    }
+  }
 }

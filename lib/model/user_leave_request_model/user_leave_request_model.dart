@@ -1,13 +1,14 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:shorinryu/model/users_get_model/users_get_model.dart';
 
-import 'user.dart';
+
 
 part 'user_leave_request_model.g.dart';
 
 @JsonSerializable()
 class UserLeaveRequestModel {
 	int? id;
-	User? user;
+	UsersGetModel? user;
 	String? start;
 	String? end;
 	String? reasone;

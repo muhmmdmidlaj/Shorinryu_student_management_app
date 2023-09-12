@@ -1,3 +1,4 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorinryu/controller/provider/admin/atendance_provider/attandence_prov.dart';
@@ -37,6 +38,57 @@ class AdminAttendenceMarkScreen extends StatelessWidget {
               'Mark Attendance',
               style: TextStyle(color: Colors.yellowAccent),
             ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                          Colors.black.withOpacity(0.73))),
+                  onPressed: () {
+                    for (int index = 0; index < users.length; index++) {
+                      attendanceProvider.updateValue(index, true);
+                      final UsersGetModel userData = users[index];
+                      final now = DateTime.now();
+                      final formattedDate =
+                          '${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)}';
+
+                      final attendanceData = {
+                        'user_id': userData.id,
+                        'attendance_date': formattedDate,
+                        'is_present': true,
+                      };
+                      attendanceProvider.addAttendanceData(attendanceData);
+                    }
+                  },
+                  child: const Text('     Mark All    ',
+                      style: TextStyle(fontSize: 8)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: 80,
+                  height: 10,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(
+                            Colors.black.withOpacity(0.73))),
+                    onPressed: () {
+                      for (int index = 0; index < users.length; index++) {
+                        attendanceProvider.updateValue(index, false);
+                        attendanceProvider
+                            .removeAttendanceData(users[index].id as int);
+                      }
+                    },
+                    child: const Text(
+                      'Unmark All',
+                      style: TextStyle(fontSize: 8),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           body: SizedBox(
             child: Column(
@@ -85,11 +137,11 @@ class AdminAttendenceMarkScreen extends StatelessWidget {
 
                                         if (newValue) {
                                           attendanceProvider.addAttendanceData(
-                                              attendanceData);
+                                              attendanceData); // Add attendance data when Checkbox is true
                                         } else {
                                           attendanceProvider
-                                              .removeAttendanceData(
-                                                  userData.id as int);
+                                              .removeAttendanceData(userData.id
+                                                  as int); // Remove attendance data when Checkbox is false
                                         }
                                       },
                                     ),
@@ -125,12 +177,18 @@ class AdminAttendenceMarkScreen extends StatelessWidget {
                     await attendanceProvider.postAttendanceData(
                         attendanceProvider.attendanceDataList);
                     if (prfrc.getBool('isAttantanceMark') == true) {
+                      // ignore: use_build_context_synchronously
                       Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Attendance Mark success full')));
+                      // ignore: use_build_context_synchronously
+                      CoolAlert.show(
+                        context: context,
+                        type: CoolAlertType.success,
+                        text:
+                            "Attendance Mark success full", // Set the duration here
+                      );
                     }
                   },
-                  child: Text('Submit'),
+                  child: const Text('Submit'),
                 ),
               ],
             ),

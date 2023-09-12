@@ -1,24 +1,21 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shorinryu/controller/provider/admin/chat_provider/chat_provider.dart';
+import 'package:shorinryu/controller/provider/chat_wbsocket_provider/chat_websocket_privider.dart';
 import 'package:shorinryu/model/chat_model/chat_model.dart';
-import 'package:shorinryu/model/users_get_model/users_get_model.dart';
-import '../../../controller/provider/chat_wbsocket_provider/chat_websocket_privider.dart';
 
-class AdminChatScreen extends StatelessWidget {
-  final UsersGetModel userdata;
-  // ignore: prefer_typing_uninitialized_variables
-  final id;
+class UserChatScreen extends StatelessWidget {
+  final String userId;
 
-  const AdminChatScreen({Key? key, required this.userdata, required this.id})
-      : super(key: key);
+  const UserChatScreen({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat with ${userdata.name}'),
+        title: const Text('Chat '),
       ),
       body: Column(
         children: [
@@ -30,7 +27,8 @@ class AdminChatScreen extends StatelessWidget {
 
                 // Filter messages based on receiver ID
                 final receiverMessages = messages
-                    .where((message) => message.receiver == userdata.id)
+                    // ignore: unrelated_type_equality_checks
+                    .where((message) => message.receiver == "1")
                     .toList();
 
                 return ListView.builder(
@@ -40,7 +38,8 @@ class AdminChatScreen extends StatelessWidget {
                     final message = receiverMessages[index];
 
                     // Check if the message is sent by the current user
-                    final isMyMessage = message.sender == id;
+                    // ignore: unrelated_type_equality_checks
+                    final isMyMessage = message.sender == userId;
 
                     return MessageWidget(
                       message: message,
@@ -51,7 +50,7 @@ class AdminChatScreen extends StatelessWidget {
               },
             ),
           ),
-          _ChatInputField(receiverId: userdata.id.toString()),
+          const _ChatInputField(receiverId: '1'),
         ],
       ),
     );
@@ -68,8 +67,6 @@ class _ChatInputField extends StatefulWidget {
 }
 
 class _ChatInputFieldState extends State<_ChatInputField> {
-  // final TextEditingController _textController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     final messageProvider = context.read<MessageProvider>();
@@ -80,7 +77,7 @@ class _ChatInputFieldState extends State<_ChatInputField> {
         children: [
           Expanded(
             child: TextField(
-              controller: messageProvider.chattextEditingController,
+              controller: messageProvider.userChattextEditingController,
               decoration: const InputDecoration(
                 hintText: 'Type your message...',
               ),
@@ -90,18 +87,19 @@ class _ChatInputFieldState extends State<_ChatInputField> {
             icon: const Icon(Icons.send),
             onPressed: () async {
               final text =
-                  messageProvider.chattextEditingController.text.trim();
+                  messageProvider.userChattextEditingController.text.trim();
               if (text.isNotEmpty) {
                 // await messageProvider.postData(widget.receiverId);
-                messageProvider.chattextEditingController.clear();
+
                 messageProvider.fetchNotification();
                 channel.sink.add(jsonEncode({
                   "type": "message",
-                  "message": {"text": text, "receiver_id": widget.receiverId}
+                  "message": {"text": text, "receiver_id": '1'}
                 }));
+                messageProvider.userChattextEditingController.clear();
               }
             },
-          ), 
+          ),
         ],
       ),
     );
@@ -112,7 +110,8 @@ class MessageWidget extends StatelessWidget {
   final MessageChat message;
   final bool isMyMessage;
 
-  const MessageWidget({super.key, required this.message, required this.isMyMessage});
+  const MessageWidget(
+      {super.key, required this.message, required this.isMyMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +120,7 @@ class MessageWidget extends StatelessWidget {
 
     return Container(
       alignment: alignment,
-      margin:const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -131,8 +130,8 @@ class MessageWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.0),
             ),
             color: isMyMessage
-                ?const Color.fromARGB(255, 124, 104, 126)
-                :const Color.fromARGB(255, 129, 177, 216),
+                ? const Color.fromARGB(255, 124, 104, 126)
+                : const Color.fromARGB(255, 129, 177, 216),
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
