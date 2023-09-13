@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shorinryu/controller/provider/admin/revenue_prov/revenue_prov.dart';
 import 'package:shorinryu/controller/provider/admin/revenue_provider/revenue_provider.dart';
@@ -204,16 +205,19 @@ class AdminRevenueScreen extends StatelessWidget {
 
                       return ListView.builder(
                         itemCount: revenue.length,
-                        reverse: true,
+                        // reverse: true,
                         itemBuilder: (context, index) {
                           final request = revenue[index];
 
-                          // Check if the message is sent by the current user
-                          // ignore: unrelated_type_equality_checks
-                          // final isMyMessage = userId;
+                          DateFormat outputDateFormat =
+                              DateFormat('dd/MMM/yyyy');
+
+                          String outputDate = outputDateFormat
+                              .format(DateTime.parse(request.paymentDate));
+
                           return Card(
                             child: ListTile(
-                              leading: Text(request.paymentDate),
+                              leading: Text(outputDate.toString()),
                               title: Text(
                                   request.user.name.toString().toUpperCase()),
                               subtitle: Text(request.paymentId),

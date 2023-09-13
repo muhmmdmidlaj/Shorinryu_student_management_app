@@ -7,11 +7,13 @@ import 'package:shorinryu/controller/provider/admin/chat_provider/chat_provider.
 import 'package:shorinryu/controller/provider/admin/web_socket/web_socket_provider.dart';
 import 'package:shorinryu/controller/provider/chat_wbsocket_provider/chat_websocket_privider.dart';
 import 'package:shorinryu/controller/provider/user/attandance_get_provider/attandance_get_provider.dart';
+import 'package:shorinryu/controller/provider/user/user_payment_view/user_payment_provider.dart';
 import 'package:shorinryu/view/user/announcement_view/announcement_view.dart';
 import 'package:shorinryu/view/user/attendence_view/attendence_view.dart';
 import 'package:shorinryu/view/user/home_user/widget/darawer.dart';
 import 'package:shorinryu/view/user/leave-application/leave_request_status.dart';
 import 'package:shorinryu/view/user/new_applycation/new_admission.dart';
+import 'package:shorinryu/view/user/payment/payment_detail.dart';
 import 'package:shorinryu/view/user/payment/payment_screen.dart';
 import 'package:shorinryu/view/user/user_chat/user_chat_screen.dart';
 import 'package:sizer/sizer.dart';
@@ -234,10 +236,18 @@ class HomePageUser extends StatelessWidget {
                       ]),
                     ),
                     onTap: () {
+                    
+
+// Splitting date and time components
+                    
+
+                      Provider.of<UserFeesUpdationProvider>(context,
+                              listen: false)
+                          .fetchPayment();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const PaymentScreen(),
+                            builder: (context) => const UserPaymentViewScreen(),
                           ));
                     },
                   ),
@@ -258,13 +268,8 @@ class HomePageUser extends StatelessWidget {
                             DateFormat('yyyy-MM-dd').format(currentMonthStart);
                         String formattedCurrentDate =
                             DateFormat('yyyy-MM-dd').format(currentDate);
-                        String formattedCurrentTime =
-                            DateFormat('HH:mm:ss').format(now);
-
-                        print(
-                            'Current Month Start Date: $formattedCurrentMonthStart');
-                        print('Current Date: $formattedCurrentDate');
-                        print('Current Time: $formattedCurrentTime');
+                        // String formattedCurrentTime =
+                        //     DateFormat('HH:mm:ss').format(now);
 
                         value.fetchAttandence(
                             formattedCurrentMonthStart, formattedCurrentDate);

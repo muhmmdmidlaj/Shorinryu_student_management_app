@@ -15,6 +15,7 @@ import 'package:shorinryu/controller/provider/user/attandance_get_provider/attan
 import 'package:shorinryu/controller/provider/user/leave_appplication_provider/leave_apply_provi.dart';
 import 'package:shorinryu/controller/provider/user/payment_provider/payment_provider.dart';
 import 'package:shorinryu/controller/provider/user/user_leave_application_get.dart';
+import 'package:shorinryu/controller/provider/user/user_payment_view/user_payment_provider.dart';
 import 'package:shorinryu/controller/provider/user/user_profile_update/register_function_prov.dart';
 import 'package:shorinryu/view/splash_screen/splash.dart';
 import 'controller/provider/admin/chat_provider/chat_provider.dart';
@@ -51,6 +52,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => PaymentProvider()),
         ChangeNotifierProvider(create: (context) => RevenueProvider()),
         ChangeNotifierProvider(create: (context) => ChatWebsocketProvider()),
+        ChangeNotifierProvider(create: (context) => UserFeesUpdationProvider()),
+
 
       ],
       child: const MaterialApp(

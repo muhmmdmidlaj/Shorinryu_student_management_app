@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 // import 'package:shorinryu/controller/provider/user/leave_appplication_provider/leave_apply_provi.dart';
 import 'package:shorinryu/controller/provider/user/user_leave_application_get.dart';
@@ -57,15 +58,23 @@ class LeaveRequestStatusScreen extends StatelessWidget {
                         itemCount: leaveRequests.length,
                         itemBuilder: (context, index) {
                           leaveRequests = leaveRequests.reversed.toList();
-                          
+
                           final UserLeaveRequestModel request =
                               leaveRequests[index];
 
+                          DateFormat outputDateFormat =
+                              DateFormat('dd/MMM/yyyy');
+
+                          String start = outputDateFormat
+                              .format(DateTime.parse(request.start!));
+
+                          String end = outputDateFormat
+                              .format(DateTime.parse(request.end!));
+
                           return Card(
                             child: ListTile(
-                              leading: Text(
-                                  "${request.start.toString()}\n${request.end.toString()}"),
-                              title: Text('${request.reasone.toString()}'),
+                              leading: Text("$start\n$end"),
+                              title: Text(request.reasone.toString()),
                               // subtitle: Text(
                               //     'Start: ${request.start} \n End: ${request.end}'),
                               trailing: Text(

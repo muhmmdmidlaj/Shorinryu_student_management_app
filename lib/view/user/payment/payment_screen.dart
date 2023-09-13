@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shorinryu/controller/provider/user/payment_provider/payment_provider.dart';
+import 'package:shorinryu/controller/provider/user/user_payment_view/user_payment_provider.dart';
 import 'package:sizer/sizer.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -75,6 +76,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
             leading: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
+                  Provider.of<UserFeesUpdationProvider>(context, listen: false)
+                      .fetchPayment();
                 },
                 icon: const Icon(
                   Icons.arrow_back_ios,

@@ -14,11 +14,11 @@ class GetNewAccessKey {
       final response = await http.post(Uri.parse('$baseUrl/user/token/'),
           body: jsonEncode({'refresh': refresh}),
           headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
+            'Content-Type': 'application/json',
           });
       if (response.statusCode == 200) {
         String newAccessKey = jsonDecode(response.body)['access'];
-        pref.setString('newAccessKey', newAccessKey);
+        pref.setString('accessKey', newAccessKey);
         return Right(newAccessKey);
       }
       return Left(ErrorModel('session Expired'));
