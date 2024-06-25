@@ -113,4 +113,24 @@ class WebsocketProvider extends ChangeNotifier {
       return []; 
     }
   }
+
+  String calculateTimeDifference(DateTime createdDate) {
+  final currentDate = DateTime.now();
+  final timeDifference = currentDate.difference(createdDate);
+  final minutesDifference = (timeDifference.inMilliseconds / (1000 * 60)).floor();
+
+  if (minutesDifference < 1) {
+    return "Just now";
+  } else if (minutesDifference == 1) {
+    return "1 minute ago";
+  } else if (minutesDifference < 60) {
+    return "$minutesDifference minutes ago";
+  } else if (minutesDifference < 1440) {
+    final hoursDifference = (minutesDifference / 60).floor();
+    return "$hoursDifference hour${hoursDifference > 1 ? 's' : ''} ago";
+  } else {
+    final daysDifference = (minutesDifference / 1440).floor();
+    return "$daysDifference day${daysDifference > 1 ? 's' : ''} ago";
+  }
+}
 }

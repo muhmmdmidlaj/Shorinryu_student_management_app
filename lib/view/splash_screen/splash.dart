@@ -9,7 +9,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 3));
+   const Duration(seconds: 5);
     _checkLoginStatus(context);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHight = MediaQuery.of(context).size.height;
@@ -66,7 +66,7 @@ class SplashScreen extends StatelessWidget {
 
   void _checkLoginStatus(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isLoggedIn = prefs.getBool('loggind') ?? false;
+    bool isLoggedIn = prefs.getBool('isUserLogined') ?? false;
 
     if (isLoggedIn) {
       // If the user is logged in, navigate to the home page.

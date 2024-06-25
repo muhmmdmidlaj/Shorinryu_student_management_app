@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cool_alert/cool_alert.dart';
+import 'package:shorinryu/controller/provider/chat_wbsocket_provider/chat_websocket_privider.dart';
 import 'package:shorinryu/controller/provider/login&logout/login_provider.dart';
 import 'package:shorinryu/view/admin/home/admin_home.dart';
 import 'package:shorinryu/view/login&register/register.dart';
@@ -55,6 +56,7 @@ class LoginPage extends StatelessWidget {
                           child: TextFormField(
                               controller: LoginProModel.loginEmailController,
                               decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(left: 25),
                                   filled: true,
                                   fillColor:
                                       const Color.fromARGB(255, 136, 134, 120),
@@ -78,6 +80,7 @@ class LoginPage extends StatelessWidget {
                             obscureText: true,
                             controller: LoginProModel.loginPasswordController,
                             decoration: InputDecoration(
+                                contentPadding: EdgeInsets.only(left: 25),
                                 filled: true,
                                 fillColor:
                                     const Color.fromARGB(255, 136, 134, 120),
@@ -118,6 +121,9 @@ class LoginPage extends StatelessWidget {
                           onPressed: LoginProModel.isLoading
                               ? null // Disable the button while loading
                               : () async {
+                                  // Provider.of<ChatWebsocketProvider>(context,
+                                  //         listen: false)
+                                  //     .chatWebInitiolizer();
                                   final SharedPreferences prefs =
                                       await SharedPreferences.getInstance();
                                   if (LoginProModel.loginKey.currentState!
@@ -160,8 +166,8 @@ class LoginPage extends StatelessWidget {
                                       // ignore: use_build_context_synchronously
                                       CoolAlert.show(
                                         context: context,
-                                        type: CoolAlertType.error,
-                                        text: "Login Fail!",
+                                        type: CoolAlertType.success,
+                                        text: "Login Success!",
                                       );
                                     } else {
                                       // ignore: use_build_context_synchronously
@@ -177,27 +183,7 @@ class LoginPage extends StatelessWidget {
                             backgroundColor: MaterialStateProperty.all(
                                 const Color.fromARGB(255, 253, 0, 0)),
                           ),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Visibility(
-                                visible: !LoginProModel.isLoading,
-                                child: const Text('Login'),
-                              ),
-                              Visibility(
-                                visible: LoginProModel.isLoading,
-                                child: const CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors
-                                          .white), // Customize color if needed
-                                  strokeWidth:
-                                      1, // Adjust the thickness of the circle
-                                  // Set semantics label for accessibility
-                                  semanticsLabel: 'Loading...',
-                                ), // Replace with your loading widget
-                              ),
-                            ],
-                          ),
+                          child: const Text('Login'),
                         ),
                         Row(
                           children: [

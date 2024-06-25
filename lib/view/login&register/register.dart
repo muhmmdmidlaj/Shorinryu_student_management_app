@@ -1,7 +1,7 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shorinryu/controller/api/authenticate/user_auth.dart';
 import 'package:shorinryu/controller/provider/register/register_provider.dart';
 import 'package:shorinryu/view/login&register/login.dart';
 import 'package:shorinryu/view/user/home_user/home.dart';
@@ -146,7 +146,8 @@ class RegisterScreen extends StatelessWidget {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => LoginPage(),
+                                              builder: (context) =>
+                                                  const LoginPage(),
                                             ));
                                       },
                                       child: const Text('Login'),
@@ -164,6 +165,13 @@ class RegisterScreen extends StatelessWidget {
                                     // ignore: use_build_context_synchronously
                                     await rgProModel.submitForm(context);
                                     const Duration(seconds: 3);
+                                    // ignore: use_build_context_synchronously
+                                    CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.loading,
+                                        text: "Loading......",
+                                        autoCloseDuration:
+                                            const Duration(seconds: 3));
 
                                     if (prefs.getBool('isRegistered') == true) {
                                       // ignore: use_build_context_synchronously
@@ -177,50 +185,26 @@ class RegisterScreen extends StatelessWidget {
                                       );
 
                                       // ignore: use_build_context_synchronously
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Registration success'),
-                                          backgroundColor: Colors.green,
-                                        ),
+                                      CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.success,
+                                        text: "Register Success",
                                       );
                                     } else {
                                       // ignore: use_build_context_synchronously
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Registration failed'),
-                                          backgroundColor: Colors.red,
-                                        ),
+                                      CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.error,
+                                        text: "Error",
                                       );
                                     }
                                   }
                                 },
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
-                                      Color.fromARGB(255, 253, 0, 0)),
+                                      const Color.fromARGB(255, 253, 0, 0)),
                                 ),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Visibility(
-                                      visible: !rgProModel.isLoading,
-                                      child: const Text('Register'),
-                                    ),
-                                    Visibility(
-                                      visible: rgProModel.isLoading,
-                                      child: const CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(Colors
-                                                .white), // Customize color if needed
-                                        strokeWidth:
-                                            1, // Adjust the thickness of the circle
-                                        // Set semantics label for accessibility
-                                        semanticsLabel: 'Loading...',
-                                      ), // Replace with your loading widget
-                                    ),
-                                  ],
-                                ),
+                                child: const Text('Register'),
                               )
                             ],
                           ),
@@ -237,17 +221,5 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 
-  // void checkUser(String email, context) async {
-  //   bool isUserRegistered = await checkUserExists(email);
-  //   if (isUserRegistered) {
-  //     print('user Exist');
-  //     showDialog(
-  //       context: context,
-  //       builder: (context) => Text('User Already Exist'),
-  //     );
-  //     // User is already registered
-  //   } else {
-  //     // User is not registered
-  //   }
-  // }
+ 
 }

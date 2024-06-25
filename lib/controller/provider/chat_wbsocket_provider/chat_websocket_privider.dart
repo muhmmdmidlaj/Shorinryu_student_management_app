@@ -10,7 +10,7 @@ class ChatWebsocketProvider extends ChangeNotifier {
     final accessKey = prefs.getString('accessKey');
 
     channel = WebSocketChannel.connect(
-      Uri.parse('ws://10.4.5.143:8000/ws/messages/?token=$accessKey'),
+      Uri.parse('ws://13.233.11.227/ws/messages/?token=$accessKey'),
     );
   }
 }
